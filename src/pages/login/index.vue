@@ -13,14 +13,14 @@
         placeholder-style="color: #eee" :value="stunumber" @input="onInputChange"
         data-val="stunumber">
       <div class="login-input-tip" v-if="stulen !== 0">{{ stulen }}</div>
-      <div class="login-input-tip" v-else>
-        <div class="ok-icon">OK</div>
-      </div>
+      <img class="login-input-tip ok-icon" src="/static/ok.svg" v-else />
     </div>
     <div class="login-row">
-      <input type="number" password class="login-input" placeholder="密码"
+      <input type="number" :password="!pwdVisiable" class="login-input" placeholder="密码"
         placeholder-style="color: #eee" :value="password" @input="onInputChange"
         data-val="password">
+      <img class="login-input-tip ok-icon" src="/static/eye.svg" v-if="pwdVisiable" @click="hidePassword"/>
+      <img class="login-input-tip ok-icon" src="/static/close-eye.svg" v-else @click="showPassword"/>
     </div>
   </div>
 
@@ -44,7 +44,8 @@ export default {
     return {
       stunumber: '',
       password: '',
-      isloading: false
+      isloading: false,
+      pwdVisiable: false
     }
   },
 
@@ -64,6 +65,14 @@ export default {
 
     onInputChange (e, type) {
       this[e.target.dataset.val] = e.target.value
+    },
+
+    showPassword () {
+      this.pwdVisiable = true
+    },
+
+    hidePassword () {
+      this.pwdVisiable = false
     }
   },
 
@@ -144,6 +153,13 @@ export default {
 
     .login-input-tip {
       color: lighten(@main-color, 30%);
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .ok-icon {
+      height: 20px;
+      width: 20px;
     }
   }
 }
