@@ -9,7 +9,7 @@
 	},
 	"miniprogramRoot": "./dist/",
 	"compileType": "miniprogram",
-	"appid": "wx736671fbd4e00b55",
+	"appid": "wxf912f8bd9523f3bf",
 	"projectname": "uestc-life",
 	"condition": {
 		"search": {
