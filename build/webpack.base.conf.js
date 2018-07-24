@@ -113,7 +113,8 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[ext]')
         }
-      }
+      },
+      { test: /\.css$/, loader: 'style!css!px2rpx?rpxUnit=75&rpxPrecision=8' }
     ]
   },
   plugins: [
