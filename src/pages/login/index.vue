@@ -8,8 +8,20 @@
   </div>
 
   <div class="login-box card">
-    <input type="text" class="stunumber login-input" placeholder="学号">
-    <input type="password" class="password login-input" placeholder="密码">
+    <div class="login-row">
+      <input type="number" class="login-input" placeholder="学号"
+        placeholder-style="color: #eee" :value="stunumber" @input="onInputChange"
+        data-val="stunumber">
+      <div class="login-input-tip" v-if="stulen !== 0">{{ stulen }}</div>
+      <div class="login-input-tip" v-else>
+        <div class="ok-icon">OK</div>
+      </div>
+    </div>
+    <div class="login-row">
+      <input type="number" password class="login-input" placeholder="密码"
+        placeholder-style="color: #eee" :value="password" @input="onInputChange"
+        data-val="password">
+    </div>
   </div>
 
   <div class="login-btn card" @click="onPost">
@@ -36,13 +48,22 @@ export default {
     }
   },
 
+  computed: {
+    stulen () {
+      return 13 - this.stunumber.length
+    }
+  },
+
   methods: {
     onPost () {
-      // nothing
       this.isloading = true
       setTimeout(() => {
         this.isloading = false
       }, 3000)
+    },
+
+    onInputChange (e, type) {
+      this[e.target.dataset.val] = e.target.value
     }
   },
 
@@ -53,7 +74,9 @@ export default {
 </script>
 
 <style scoped lang="less">
-@main-color: rgb(77, 174, 163);
+@main-color: #4DAEA4;
+@ok-color: #4DAEA4;
+@wrong-color: #FA6E79;
 
 .login-page {
   background-color: #aaa;
@@ -102,15 +125,26 @@ export default {
   padding: 10px 20px;
   box-sizing: border-box;
 
-  .login-input {
-    font-size: 20px;
+  .login-row {
     padding: 15px 0;
-    color: #aaa;
-    font-weight: lighter;
-  }
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-  .stunumber {
-    border-bottom: 1px solid #eee;
+    .login-input {
+      width: 80%;
+      font-size: 20px;
+      color: @main-color;
+      font-weight: lighter;
+    }
+
+    &:first-child {
+      border-bottom: 1px solid #eee;
+    }
+
+    .login-input-tip {
+      color: lighten(@main-color, 30%);
+    }
   }
 }
 
