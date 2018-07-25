@@ -3,6 +3,7 @@
     <div class="content">
       <p class="title">已完成的页面</p>
       <a href="/pages/login/main"><button type="primary">前往登录页</button></a>
+      <a href="/pages/home/main"><button type="primary">前往首页</button></a>
     </div>
   </div>
 </template>
