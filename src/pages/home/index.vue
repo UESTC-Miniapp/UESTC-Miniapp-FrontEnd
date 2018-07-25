@@ -163,6 +163,7 @@ export default {
           font-size: 14px;
           width: 100%;
           text-align: center;
+          color: #666;
         }
       }
     }
