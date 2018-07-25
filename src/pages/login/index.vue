@@ -11,7 +11,7 @@
     <div class="login-row">
       <input type="number" class="login-input" placeholder="学号"
         placeholder-style="color: #eee" :value="stunumber" @input="onInputChange"
-        data-val="stunumber">
+        data-val="stunumber" maxlength=13>
       <div class="login-input-tip" v-if="stulen !== 0">{{ stulen }}</div>
       <img class="login-input-tip icon" src="/static/ok.svg" v-else />
     </div>
@@ -90,9 +90,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-@main-color: #4DAEA4;
-@ok-color: #4DAEA4;
-@wrong-color: #FA6E79;
+@import '../../style/common.less';
 
 .login-page {
   background-color: #aaa;
@@ -170,12 +168,6 @@ export default {
       animation: fly 0.1s ease;
     }
   }
-}
-
-.card {
-  background-color: #fff;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-  border-radius: 3px;
 }
 
 .login-btn {
