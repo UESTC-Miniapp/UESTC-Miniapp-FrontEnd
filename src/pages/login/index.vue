@@ -13,20 +13,25 @@
         placeholder-style="color: #eee" :value="stunumber" @input="onInputChange"
         data-val="stunumber">
       <div class="login-input-tip" v-if="stulen !== 0">{{ stulen }}</div>
-      <img class="login-input-tip ok-icon" src="/static/ok.svg" v-else />
+      <img class="login-input-tip icon" src="/static/ok.svg" v-else />
     </div>
     <div class="login-row">
-      <input type="number" :password="!pwdVisiable" class="login-input" placeholder="密码"
+      <input type="number" :password="!pwdVisiable" class="login-input" placeholder="信息门户密码"
         placeholder-style="color: #eee" :value="password" @input="onInputChange"
         data-val="password">
-      <img class="login-input-tip ok-icon" src="/static/eye.svg" v-if="pwdVisiable" @click="hidePassword"/>
-      <img class="login-input-tip ok-icon" src="/static/close-eye.svg" v-else @click="showPassword"/>
+      <img class="login-input-tip icon" src="/static/eye.svg" @click="hidePassword" v-if="pwdVisiable"/>
+      <img class="login-input-tip icon" src="/static/close-eye.svg" @click="showPassword" v-else/>
     </div>
   </div>
 
   <div class="login-btn card" @click="onPost">
-    <span v-if="!isloading" class="text">即刻开启多彩成电生活</span>
-    <div class="btn-loading" v-else>
+    <span v-if="!isloading" class="text">{{ loadingText }}</span>
+    <div class="btn-loadings" v-else>
+      <div class="loading-block">U</div>
+      <div class="loading-block">E</div>
+      <div class="loading-block">S</div>
+      <div class="loading-block">T</div>
+      <div class="loading-block">C</div>
     </div>
   </div>
 
@@ -45,7 +50,8 @@ export default {
       stunumber: '',
       password: '',
       isloading: false,
-      pwdVisiable: false
+      pwdVisiable: false,
+      loadingText: '即刻开启多彩成电生活'
     }
   },
 
@@ -60,7 +66,8 @@ export default {
       this.isloading = true
       setTimeout(() => {
         this.isloading = false
-      }, 3000)
+        this.loadingText = '登录成功'
+      }, 5000)
     },
 
     onInputChange (e, type) {
@@ -157,9 +164,10 @@ export default {
       text-align: center;
     }
 
-    .ok-icon {
+    .icon {
       height: 20px;
       width: 20px;
+      animation: fly 0.1s ease;
     }
   }
 }
@@ -192,6 +200,31 @@ export default {
     animation: loading 1s infinite ease;
     transform-origin: center;
     border-radius: 50px;
+  }
+
+  .btn-loadings {
+    width: 50px;
+    display: flex;
+    height: 20px;
+    justify-content: space-between;
+    align-items: center;
+
+    .loading-block {
+      color: @main-color;
+      animation: loading infinite ease 2s;
+      border-radius: 5px;
+      opacity: 0;
+
+      /* 定义动画 */
+      @animation-speed: .05s;
+      .loop(@n) when (@n >= 0) {
+        &:nth-child(@{n}) {
+          animation-delay: @n * @animation-speed;
+        }
+        .loop(@n - 1)
+      }
+      .loop(5)
+    }
   }
 
   .text {
@@ -240,17 +273,26 @@ export default {
   }
 }
 
+@keyframes loading2 {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0.2);
+  }
+}
+
 @keyframes loading {
   0% {
-    transform: translateX(100px) scaleX(1.2);
+    transform: translateX(100px) scaleY(1.2);
     opacity: 0;
   }
   50% {
-    transform: translateX(0px) scaleX(1);
+    transform: translateX(0px) scaleY(1);
     opacity: 1;
   }
   100% {
-    transform: translateX(-100px) scaleX(1.2);
+    transform: translateX(-100px) scaleY(1.2);
     opacity: 0;
   }
 }
