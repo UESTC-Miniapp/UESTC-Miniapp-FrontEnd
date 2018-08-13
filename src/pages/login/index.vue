@@ -44,6 +44,9 @@
 </template>
 
 <script>
+import db from '@/service/db'
+import api from '@/service/api'
+
 export default {
   data () {
     return {
@@ -83,8 +86,19 @@ export default {
     }
   },
 
-  created () {
-    // nothing
+  async onLoad () {
+    const { token, username, passwd } = await db.get(['token', 'username', 'passwd'])
+
+    if (token) {
+      // 直接去主页
+    } else if (username && passwd) {
+      // 尝试登录
+      const res = await api.login({ username, passwd })
+      if (res.success) {
+        await db.set({ token: res.token })
+        wx.navigateTo('/pages/home/main')
+      }
+    }
   }
 }
 </script>

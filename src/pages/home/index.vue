@@ -73,9 +73,21 @@
 </template>
 
 <script>
+import db from '@/service/db'
+
 export default {
   data () {
     return {}
+  },
+
+  async onLoad () {
+    const { token, username } = await db.get(['token', 'username'])
+
+    if (!token || !username) {
+      wx.navigateTo({ url: '/pages/login/main' })
+    } else {
+      // 检查token有效性
+    }
   }
 }
 </script>
