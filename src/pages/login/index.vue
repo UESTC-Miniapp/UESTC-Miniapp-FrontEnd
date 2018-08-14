@@ -11,14 +11,14 @@
     <div class="login-row">
       <input type="number" class="login-input" placeholder="学号"
         placeholder-style="color: #eee" :value="stunumber" @input="onInputChange"
-        data-val="stunumber" maxlength=13>
+        data-val="stunumber" maxlength=13 cursor-spacing=20>
       <div class="login-input-tip" v-if="stulen !== 0">{{ stulen }}</div>
       <img class="login-input-tip icon" src="/static/ok.svg" v-else />
     </div>
     <div class="login-row">
       <input type="number" :password="!pwdVisiable" class="login-input" placeholder="信息门户密码"
         placeholder-style="color: #eee" :value="password" @input="onInputChange"
-        data-val="password" :focus="pwdFocus">
+        data-val="password" :focus="pwdFocus" cursor-spacing=20 @blur="onBlur" @focus="onFocus">
       <img class="login-input-tip icon" src="/static/eye.svg" @click="hidePassword" v-if="pwdVisiable"/>
       <img class="login-input-tip icon" src="/static/close-eye.svg" @click="showPassword" v-else/>
     </div>
@@ -59,6 +59,7 @@ export default {
 
       isloading: false,
       pwdVisiable: false,
+      pwdFocus: false,
 
       loadingText: '即刻开启多彩成电生活'
     }
@@ -71,9 +72,6 @@ export default {
   computed: {
     stulen () {
       return 13 - this.stunumber.length
-    },
-    pwdFocus () {
-      return this.stunumber.length === 13
     }
   },
 
@@ -104,6 +102,17 @@ export default {
 
     onInputChange (e, type) {
       this[e.target.dataset.val] = e.target.value
+      if (e.target.dataset.val === 'stunumber') {
+        this.pwdFocus = this.stunumber.length === 13
+      }
+    },
+
+    onBlur () {
+      this.pwdFocus = false
+    },
+
+    onFocus () {
+      this.pwdFocus = true
     },
 
     showPassword () {
