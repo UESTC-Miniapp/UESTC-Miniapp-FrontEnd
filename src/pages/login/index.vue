@@ -18,7 +18,7 @@
     <div class="login-row">
       <input type="number" :password="!pwdVisiable" class="login-input" placeholder="信息门户密码"
         placeholder-style="color: #eee" :value="password" @input="onInputChange"
-        data-val="password">
+        data-val="password" :focus="pwdFocus">
       <img class="login-input-tip icon" src="/static/eye.svg" @click="hidePassword" v-if="pwdVisiable"/>
       <img class="login-input-tip icon" src="/static/close-eye.svg" @click="showPassword" v-else/>
     </div>
@@ -56,8 +56,10 @@ export default {
     return {
       stunumber: '',
       password: '',
+
       isloading: false,
       pwdVisiable: false,
+
       loadingText: '即刻开启多彩成电生活'
     }
   },
@@ -69,6 +71,9 @@ export default {
   computed: {
     stulen () {
       return 13 - this.stunumber.length
+    },
+    pwdFocus () {
+      return this.stunumber.length === 13
     }
   },
 
