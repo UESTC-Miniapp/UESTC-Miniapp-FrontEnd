@@ -40,12 +40,16 @@
     <div class="circle circle-2"></div>
     <div class="circle circle-3"></div>
   </div>
+
+  <LoginMessage />
 </div>
 </template>
 
 <script>
 import db from '@/service/db'
-import api from '@/service/api'
+import api from '../../service/api'
+
+import Message from '@/components/message'
 
 export default {
   data () {
@@ -58,6 +62,10 @@ export default {
     }
   },
 
+  components: {
+    LoginMessage: Message
+  },
+
   computed: {
     stulen () {
       return 13 - this.stunumber.length
@@ -65,12 +73,28 @@ export default {
   },
 
   methods: {
-    onPost () {
+    async onPost () {
+      if (!this.validInput()) return
+
       this.isloading = true
-      setTimeout(() => {
+
+      const res = await api.login({
+        username: this.stunumber,
+        passwd: this.password
+      })
+
+      if (res.success) {
+        await db.set({ token: res.token })
         this.isloading = false
         this.loadingText = '登录成功'
-      }, 5000)
+      } else {
+        this.isloading = false
+        this.$children[0].show({
+          content: '请检查账号密码是否有错',
+          title: '登录失败',
+          duration: 3000
+        })
+      }
     },
 
     onInputChange (e, type) {
@@ -83,6 +107,25 @@ export default {
 
     hidePassword () {
       this.pwdVisiable = false
+    },
+
+    validInput () {
+      const validators = [
+        [this.stunumber.length > 0, '请输入13位学号'],
+        [this.stunumber.length === 13, '请检查输入的学号是否有错'],
+        [this.password.length > 0, '请输入信息门户密码']
+      ]
+      validators.some((v, i) => {
+        if (!v[0]) {
+          this.$children[0].show({
+            content: v[1],
+            title: '提示',
+            duration: 3000
+          })
+        }
+        return !v[0]
+      })
+      return validators.every(v => v[0])
     }
   },
 
