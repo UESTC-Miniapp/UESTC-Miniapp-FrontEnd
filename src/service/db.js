@@ -66,5 +66,37 @@ export default {
     }
 
     return results.every(v => v)
+  },
+
+  /**
+   * 从本地缓存中清除指定键值
+   * @param {Array} keys 键值数组
+   */
+  async remove (keys) {
+    const errorKeys = []
+
+    keys = typeof (keys) === 'string' ? [keys] : keys
+
+    await Promise.all(keys.map(key => new Promise((resolve) => {
+      wx.removeStorage({
+        key,
+        success: res => {
+          resolve({ [key]: true })
+        },
+        fail: res => {
+          resolve()
+          errorKeys.push(key)
+        }
+      })
+    })))
+
+    if (errorKeys.length > 0) {
+      console.error({
+        msg: '[DB.get]Cannot remove those keys content',
+        errorKeys
+      })
+    }
+
+    return errorKeys.length > 0
   }
 }

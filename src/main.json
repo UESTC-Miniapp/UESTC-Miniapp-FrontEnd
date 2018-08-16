@@ -2,9 +2,7 @@
   "pages": [
     "pages/home/main",
     "pages/index/main",
-    "pages/counter/main",
-    "pages/logs/main",
-    "pages/login/main"
+    "pages/eams/grade/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

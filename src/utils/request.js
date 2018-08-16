@@ -15,8 +15,17 @@ export function request (url, method, data = null) {
       url,
       method,
       data,
+      header: {
+        'content-type': 'application/x-www-form-urlencoded'
+      },
       dataType: 'json',
-      success (res) { resolve(res) },
+      success (res) {
+        if (res.statusCode === 200) {
+          resolve(res.data)
+        } else {
+          reject(res)
+        }
+      },
       fail (res) { reject(res) }
     })
   })

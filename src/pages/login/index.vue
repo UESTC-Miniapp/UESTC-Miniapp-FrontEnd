@@ -48,8 +48,9 @@
 <script>
 import db from '@/service/db'
 import api from '../../service/api'
+import { errorCode2Msg } from '../../utils/error'
 
-import Message from '@/components/message'
+import Message from '@/components/Message'
 
 export default {
   data () {
@@ -87,13 +88,14 @@ export default {
       })
 
       if (res.success) {
-        await db.set({ token: res.token })
+        await db.set({ token: res.token, username: this.stunumber })
         this.isloading = false
         this.loadingText = '登录成功'
+        wx.navigateTo({ url: '/pages/home/main' })
       } else {
         this.isloading = false
         this.$children[0].show({
-          content: '请检查账号密码是否有错',
+          content: errorCode2Msg(res.error_code),
           title: '登录失败',
           duration: 3000
         })

@@ -1,11 +1,6 @@
 <template>
   <div class="home-page">
-    <div class="header">
-      <div class="motto">
-        <div class="title">UESTC</div>
-        <div class="little">我的多彩成电生活</div>
-      </div>
-    </div>
+    <HomeHeader title="UESTC" subtitle="我的多彩成电生活" size="large"/>
 
     <div class="content">
       <div class="search-box card">
@@ -14,10 +9,12 @@
       </div>
       <div class="entry-card card">
         <div class="entry-row">
-          <div class="entry">
-            <img src="/static/book.svg" alt="" class="icon">
-            <div class="text">教务查询</div>
-          </div>
+          <a href="/pages/eams/grade/main">
+            <div class="entry">
+              <img src="/static/book.svg" alt="" class="icon">
+              <div class="text">教务查询</div>
+            </div>
+          </a>
           <div class="entry">
             <img src="/static/book.svg" alt="" class="icon">
             <div class="text">图书馆</div>
@@ -65,28 +62,82 @@
           <div class="teacher">爱谁谁</div>
         </div>
       </div>
-      <div class="card test-card">sdfdf</div>
-      <div class="card test-card">sdfdf</div>
-      <div class="card test-card">sdfdf</div>
+      <div class="card course-card">
+        <div class="card-title">
+          <img src="/static/book.svg" alt="" class="card-icon">
+          <span>今天还有一节待出勤课程</span>
+        </div>
+        <div class="card-content">
+          <div class="course">编译原理</div>
+        </div>
+        <div class="card-footer">
+          <div class="time">14:00</div>
+          <div class="location">品A201</div>
+          <div class="teacher">爱谁谁</div>
+        </div>
+      </div>
+      <div class="card course-card">
+        <div class="card-title">
+          <img src="/static/book.svg" alt="" class="card-icon">
+          <span>今天还有一节待出勤课程</span>
+        </div>
+        <div class="card-content">
+          <div class="course">编译原理</div>
+        </div>
+        <div class="card-footer">
+          <div class="time">14:00</div>
+          <div class="location">品A201</div>
+          <div class="teacher">爱谁谁</div>
+        </div>
+      </div>
+      <div class="card course-card">
+        <div class="card-title">
+          <img src="/static/book.svg" alt="" class="card-icon">
+          <span>今天还有一节待出勤课程</span>
+        </div>
+        <div class="card-content">
+          <div class="course">编译原理</div>
+        </div>
+        <div class="card-footer">
+          <div class="time">14:00</div>
+          <div class="location">品A201</div>
+          <div class="teacher">爱谁谁</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import db from '@/service/db'
+import db from '../../service/db'
+import api from '../../service/api'
+
+import Header from '@/components/Header'
 
 export default {
   data () {
     return {}
   },
 
+  components: {
+    HomeHeader: Header
+  },
+
   async onLoad () {
     const { token, username } = await db.get(['token', 'username'])
 
+    console.debug('[Home loaded]', token, username)
+
+    // 首先检查是否已登录
     if (!token || !username) {
       wx.navigateTo({ url: '/pages/login/main' })
     } else {
-      // 检查token有效性
+      // 然后检查登录是否过期
+      const res = await api.checkToken({ token, username })
+      if (!res.success || !res.token_is_available) {
+        await db.remove(['token', 'username'])
+        wx.navigateTo({ url: '/pages/login/main' })
+      }
     }
   }
 }
@@ -96,33 +147,6 @@ export default {
 @import '../../style/common.less';
 
 .home-page {
-  .header {
-    background: url("http://oxwou2idi.bkt.clouddn.com/head.jpg");
-    background-size: cover;
-    height: 300px;
-    position: relative;
-    z-index: -1;
-
-    .motto {
-      color: #fff;
-      text-align: center;
-      position: absolute;
-      bottom: 80px;
-      width: 100%;
-
-      .title {
-        font-size: 60px;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-      }
-
-      .little {
-        font-size: 18px;
-        letter-spacing: 5px;
-        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-      }
-    }
-  }
-
   .content {
     padding: 0 20px;
     margin-top: -25px;
