@@ -24,7 +24,7 @@
     </div>
   </div>
 
-  <div class="login-btn card" @click="onPost">
+  <div class="login-btn" @click="onPost">
     <span v-if="!isloading" class="text">{{ loadingText }}</span>
     <div class="btn-loadings" v-else>
       <div class="loading-block">U</div>
@@ -244,6 +244,7 @@ export default {
 }
 
 .login-btn {
+  .card();
   text-align: center;
   font-size: 18px;
   margin: auto;
@@ -257,6 +258,7 @@ export default {
   position: relative;
   border-radius: 50px;
   overflow: hidden;
+  padding: 0;
 
   .btn-loading {
     height: 2px;

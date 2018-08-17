@@ -48,62 +48,7 @@
         </div>
       </div>
 
-      <div class="card course-card">
-        <div class="card-title">
-          <img src="/static/book.svg" alt="" class="card-icon">
-          <span>今天还有一节待出勤课程</span>
-        </div>
-        <div class="card-content">
-          <div class="course">编译原理</div>
-        </div>
-        <div class="card-footer">
-          <div class="time">14:00</div>
-          <div class="location">品A201</div>
-          <div class="teacher">爱谁谁</div>
-        </div>
-      </div>
-      <div class="card course-card">
-        <div class="card-title">
-          <img src="/static/book.svg" alt="" class="card-icon">
-          <span>今天还有一节待出勤课程</span>
-        </div>
-        <div class="card-content">
-          <div class="course">编译原理</div>
-        </div>
-        <div class="card-footer">
-          <div class="time">14:00</div>
-          <div class="location">品A201</div>
-          <div class="teacher">爱谁谁</div>
-        </div>
-      </div>
-      <div class="card course-card">
-        <div class="card-title">
-          <img src="/static/book.svg" alt="" class="card-icon">
-          <span>今天还有一节待出勤课程</span>
-        </div>
-        <div class="card-content">
-          <div class="course">编译原理</div>
-        </div>
-        <div class="card-footer">
-          <div class="time">14:00</div>
-          <div class="location">品A201</div>
-          <div class="teacher">爱谁谁</div>
-        </div>
-      </div>
-      <div class="card course-card">
-        <div class="card-title">
-          <img src="/static/book.svg" alt="" class="card-icon">
-          <span>今天还有一节待出勤课程</span>
-        </div>
-        <div class="card-content">
-          <div class="course">编译原理</div>
-        </div>
-        <div class="card-footer">
-          <div class="time">14:00</div>
-          <div class="location">品A201</div>
-          <div class="teacher">爱谁谁</div>
-        </div>
-      </div>
+      <GradeCard title="成绩" :header="gradeHeader" :content="gradeContent" :styles="styles"/>
     </div>
   </div>
 </template>
@@ -113,14 +58,28 @@ import db from '../../service/db'
 import api from '../../service/api'
 
 import Header from '@/components/Header'
+import GradeCard from '../eams/grade/GradeCard'
 
 export default {
   data () {
-    return {}
+    return {
+      gradeHeader: ['课程代码', '课程名称', '学分', '成绩', '绩点'],
+      gradeContent: [
+        ['C1000011', '管理与领导学', 2, 90, 4.0],
+        ['C1000011', '管理与领导学', 2, 90, 4.0],
+        ['C1000011', '管理与领导学', 2, 90, 4.0],
+        ['C1000011', '管理与领导学', 2, 90, 4.0],
+        ['C1000011', '管理与领导学', 2, 90, 4.0]
+      ],
+      styles: new Array(5).fill({ width: '32%', align: 'l' }).map((v, i) => {
+        return i >= 2 ? Object.assign({}, v, { width: '12%', align: 'c' }) : v
+      })
+    }
   },
 
   components: {
-    HomeHeader: Header
+    HomeHeader: Header,
+    GradeCard
   },
 
   async onLoad () {
@@ -211,43 +170,6 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-
-    .course-card {
-      padding: 10px 20px;
-      margin-top: 20px;
-
-      .card-icon {
-        height: 20px;
-        width: 20px;
-        margin-right: 5px;
-      }
-
-      .card-title {
-        font-size: 16px;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 10px;
-        display: flex;
-        align-items: center;
-        color: #666;
-      }
-
-      .card-content {
-        .course {
-          font-size: 30px;
-          text-align: center;
-          padding: 20px;
-        }
-      }
-
-      .card-footer {
-        color: #666;
-        display: flex;
-        justify-content: space-between;
-        font-size: 16px;
-        border-top: 1px solid #eee;
-        padding-top: 10px;
-      }
     }
   }
 }

@@ -9,7 +9,8 @@ const { url } = config
 
 const funcTable = {
   login: 'login',
-  checkToken: 'check_token'
+  checkToken: 'check_token',
+  getGrade: 'grade'
 }
 
 const exportFuncs = {}
