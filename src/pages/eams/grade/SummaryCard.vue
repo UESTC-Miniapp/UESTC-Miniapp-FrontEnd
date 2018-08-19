@@ -10,15 +10,15 @@
     <div class="card-footer">
       <div class="footer-block">
         <div class="title">综合GPA</div>
-        <div class="content">3.30</div>
+        <div class="content">{{ averGPA }}</div>
       </div>
       <div class="footer-block">
-        <div class="title">平均成绩</div>
-        <div class="content">83.30</div>
+        <div class="title">已修科目</div>
+        <div class="content">{{ courseCount }}</div>
       </div>
       <div class="footer-block">
         <div class="title">已修学分</div>
-        <div class="content">103.5</div>
+        <div class="content">{{ sumPoint }}</div>
       </div>
     </div>
   </div>
@@ -26,7 +26,12 @@
 
 <script>
 export default {
-  props: {}
+  props: {
+    averGPA: Number,
+    courseCount: Number,
+    sumPoint: Number,
+    semesterSummary: Array
+  }
 }
 </script>
 

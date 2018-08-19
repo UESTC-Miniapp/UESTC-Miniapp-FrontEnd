@@ -88,7 +88,7 @@ export default {
       })
 
       if (res.success) {
-        await db.set({ token: res.token, username: this.stunumber })
+        await db.set({ token: res.token, username: this.stunumber, password: this.password })
         this.isloading = false
         this.loadingText = '登录成功'
         wx.navigateTo({ url: '/pages/home/main' })
@@ -146,16 +146,18 @@ export default {
   },
 
   async onLoad () {
-    const { token, username, passwd } = await db.get(['token', 'username', 'passwd'])
+    const { token, username, password } = await db.get(['token', 'username', 'password'])
 
     if (token) {
       // 直接去主页
-    } else if (username && passwd) {
+    } else if (username && password) {
       // 尝试登录
-      const res = await api.login({ username, passwd })
+      const res = await api.login({ username, passwd: password })
+      this.stunumber = username
+      this.password = password
       if (res.success) {
-        await db.set({ token: res.token })
-        wx.navigateTo('/pages/home/main')
+        // await db.set({ token: res.token })
+        // wx.navigateTo('/pages/home/main')
       }
     }
   }

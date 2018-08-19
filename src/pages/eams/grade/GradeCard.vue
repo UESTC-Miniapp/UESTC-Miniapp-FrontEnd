@@ -17,9 +17,9 @@
       </div>
     </div>
     <div class="card-footer">
-      <div class="time">学分：16</div>
-      <div class="location">平均分：83</div>
-      <div class="teacher">加权绩点：3.2</div>
+      <div class="time">学分：{{ summary && summary.sum_point }}</div>
+      <div class="location">总科目：{{ summary && summary.course_count }}</div>
+      <div class="teacher">加权绩点：{{ summary && summary.aver_gpa }}</div>
     </div>
   </div>
 </template>
@@ -35,7 +35,8 @@ export default {
     title: String,
     header: Array,
     styles: Array,
-    content: Array
+    content: Array,
+    summary: Object
   },
 
   computed: {
