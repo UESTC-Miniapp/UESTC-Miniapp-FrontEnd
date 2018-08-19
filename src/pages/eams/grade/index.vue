@@ -55,8 +55,9 @@ export default {
     const res = await api.getGrade({ username, token })
     if (res.success) {
       this.summary = res.data.summary
-      this.semesterSummary = res.data.semester_summary
-      this.semesterDetail = this.buildDetail(res.data)
+      const { summary, detail } = this.buildDetail(res.data, username)
+      this.semesterSummary = summary
+      this.semesterDetail = detail
     } else {
       message.show({
         title: '出错了',
@@ -69,7 +70,8 @@ export default {
     /**
      * 生成每学期的详情数据
      */
-    buildDetail (data) {
+    buildDetail (data, username) {
+      const startYear = parseInt(username.slice(0, 4))
       const detail = data.detail
       const semesterSummary = data.semester_summary
       let detailGroupBySemester = {}
@@ -82,22 +84,43 @@ export default {
         }
       })
 
+      const semTable = ['大一', '大二', '大三', '大四']
+      const termTable = ['一', '二']
+      const termTable2 = ['上', '下']
+
       const builtDetail = semesterSummary.map(v => {
         const key = `${v.semester_year} ${v.semester_term}`
+        const year = parseInt(v.semester_year.slice(0, 4))
         // 按学分倒序排列
         const detail = detailGroupBySemester[key].sort((a, b) => a.point < b.point)
         return {
           summary: v,
           key,
-          title: `${v.semester_year}学年第${v.semester_term}学期`,
+          title: `${semTable[year - startYear]}学年第${termTable[v.semester_term - 1]}学期`,
           content: detail.map(v => [v.course_code, limitText(v.course_name, 14),
-            v.point, v.grade, this.grade2gpa(v.grade)])
+            parseFloat(v.point).toFixed(1), v.grade, this.grade2gpa(v.grade).toFixed(1)])
         }
       }).sort((a, b) => a.key < b.key) // 最新的数据放在最前面
 
+      console.log(builtDetail)
+
+      const summary = builtDetail.map(v => {
+        const year = parseInt(v.summary.semester_year.slice(0, 4))
+        return {
+          title: `${semTable[year - startYear]}${termTable2[v.summary.semester_term - 1]}`,
+          aver_gpa: v.summary.aver_gpa.toFixed(1),
+          aver_grade: v.content.reduce((last, cur) => {
+            return last + cur[2] / (v.summary.sum_point + 0.0001) * cur[3]
+          }, 0).toFixed(1)
+        }
+      }).reverse()
+
       console.debug('[grade builddata]', builtDetail, detailGroupBySemester)
 
-      return builtDetail
+      return {
+        summary,
+        detail: builtDetail
+      }
     },
 
     /**
