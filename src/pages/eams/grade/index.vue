@@ -1,17 +1,17 @@
 <template>
-  <view class="grade-page">
+  <div class="grade-page">
     <Message />
     <GradeHeader title="思而不学则殆"
       subtitle="Thought without learning is perilous."/>
 
-    <view class="content">
+    <div class="content">
       <SummaryCard :averGPA="summary.aver_gpa" :courseCount="summary.course_count"
         :sumPoint="summary.sum_point" :semesterSummary="semesterSummary"/>
       <GradeCard :title="item.title" :header="gradeHeader" :content="item.content"
         :styles="gradeStyles" v-for="(item, index) in semesterDetail" :key="index"
         :summary="item.summary"/>
-    </view>
-  </view>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -98,7 +98,7 @@ export default {
           key,
           title: `${semTable[year - startYear]}学年第${termTable[v.semester_term - 1]}学期`,
           content: detail.map(v => [v.course_code, limitText(v.course_name, 14),
-            parseFloat(v.point).toFixed(1), v.grade, this.grade2gpa(v.grade).toFixed(1)])
+            parseFloat(v.point).toFixed(1), v.final_grade, this.grade2gpa(v.final_grade).toFixed(1)])
         }
       }).sort((a, b) => a.key < b.key) // 最新的数据放在最前面
 

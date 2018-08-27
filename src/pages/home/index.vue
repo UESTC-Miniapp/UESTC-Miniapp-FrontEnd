@@ -12,13 +12,15 @@
           <a href="/pages/eams/grade/main">
             <div class="entry">
               <img src="/static/book.svg" alt="" class="icon">
-              <div class="text">教务查询</div>
+              <div class="text">成绩查询</div>
             </div>
           </a>
-          <div class="entry">
-            <img src="/static/book.svg" alt="" class="icon">
-            <div class="text">图书馆</div>
-          </div>
+          <a href="/pages/eams/course/main">
+            <div class="entry">
+              <img src="/static/book.svg" alt="" class="icon">
+              <div class="text">课程表</div>
+            </div>
+          </a>
           <div class="entry">
             <img src="/static/book.svg" alt="" class="icon">
             <div class="text">校车查询</div>

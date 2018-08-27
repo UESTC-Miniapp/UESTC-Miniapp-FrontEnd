@@ -29,7 +29,7 @@ export default {
     color: #fff;
     text-align: center;
     position: absolute;
-    bottom: 80px;
+    bottom: 120px;
     width: 100%;
 
     .title {

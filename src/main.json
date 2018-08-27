@@ -3,7 +3,8 @@
     "pages/home/main",
     "pages/login/main",
     "pages/index/main",
-    "pages/eams/grade/main"
+    "pages/eams/grade/main",
+    "pages/eams/course/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
