@@ -32,7 +32,7 @@ export default {
 
 .course-card {
   .card();
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 
   .card-content {
     padding: 20px;

@@ -51,8 +51,10 @@ export default {
   async mounted () {
     const message = this.$children[0]
     const { token, username } = await db.get(['token', 'username'])
+    wx.showLoading({ title: '正在拉取数据' })
 
     const res = await api.getGrade({ username, token })
+    wx.hideLoading()
     if (res.success) {
       this.summary = res.data.summary
       const { summary, detail } = this.buildDetail(res.data, username)
@@ -138,7 +140,7 @@ export default {
 
 .grade-page {
   .content {
-    padding: 0 20px;
+    padding: 0 10px;
     margin-top: -25px;
     margin-bottom: 30px;
   }

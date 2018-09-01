@@ -21,10 +21,12 @@
               <div class="text">课程表</div>
             </div>
           </a>
-          <div class="entry">
-            <img src="/static/book.svg" alt="" class="icon">
-            <div class="text">校车查询</div>
-          </div>
+          <a href="/pages/login/main">
+            <div class="entry">
+              <img src="/static/book.svg" alt="" class="icon">
+              <div class="text">退出登录</div>
+            </div>
+          </a>
           <div class="entry">
             <img src="/static/book.svg" alt="" class="icon">
             <div class="text">空闲教室</div>
@@ -89,14 +91,18 @@ export default {
 
     console.debug('[Home loaded]', token, username)
 
+    wx.showLoading({ title: '正在检查登录有效性' })
+
     // 首先检查是否已登录
     if (!token || !username) {
       wx.navigateTo({ url: '/pages/login/main' })
+      wx.hideLoading()
     } else {
       // 然后检查登录是否过期
       const res = await api.checkToken({ token, username })
+      wx.hideLoading()
       if (!res.success || !res.token_is_available) {
-        await db.remove(['token', 'username'])
+        // await db.remove(['token', 'username'])
         wx.navigateTo({ url: '/pages/login/main' })
       }
     }
@@ -109,7 +115,7 @@ export default {
 
 .home-page {
   .content {
-    padding: 0 20px;
+    padding: 0 10px;
     margin-top: -25px;
 
     .search-box {
@@ -128,7 +134,7 @@ export default {
 
     .entry-card {
       min-height: 100px;
-      margin-top: 20px;
+      margin-top: 10px;
       padding: 20px;
 
       .entry-row {
@@ -147,7 +153,7 @@ export default {
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
-        
+
         &:active {
           background-color: #eee;
         }

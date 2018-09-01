@@ -72,8 +72,10 @@ export default {
   async mounted () {
     const { token, username } = await db.get(['token', 'username'])
     const message = this.$children[0]
+    wx.showLoading({ title: '正在拉取数据' })
 
-    const res = await api.getCourseTable({ token, username, semesterId: null })
+    const res = await api.getCourseTable({ token, username, semesterId: '' })
+    wx.hideLoading()
     let courses = coursesTemplate
     if (res.success) {
       res.data.forEach(v => {
@@ -151,7 +153,7 @@ export default {
     }
 
     .course-container {
-      padding: 20px;
+      padding: 10px;
       background-color: #fff;
       min-height: 200px;
     }

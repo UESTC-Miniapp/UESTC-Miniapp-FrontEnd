@@ -55,8 +55,8 @@ export default {
 
 .grade-card {
   .card();
-  margin-top: 20px;
-  
+  margin-top: 10px;
+
   .card-content {
     font-size: 14px;
 
@@ -64,7 +64,7 @@ export default {
       color: #aaa;
       border-bottom: 1rpx solid #eee;
     }
-    
+
     .table-row {
       display: flex;
       padding: 5px 0;
