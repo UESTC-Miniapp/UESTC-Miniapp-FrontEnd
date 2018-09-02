@@ -27,10 +27,12 @@
               <div class="text">退出登录</div>
             </div>
           </a>
-          <div class="entry">
-            <img src="/static/book.svg" alt="" class="icon">
-            <div class="text">空闲教室</div>
-          </div>
+          <a href="/pages/eams/exam/main">
+            <div class="entry">
+              <img src="/static/book.svg" alt="" class="icon">
+              <div class="text">考试</div>
+            </div>
+          </a>
         </div>
         <div class="entry-row">
           <div class="entry">
