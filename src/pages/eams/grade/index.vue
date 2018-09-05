@@ -97,7 +97,7 @@ export default {
         const detail = detailGroupBySemester[key].sort((a, b) => a.point < b.point)
         return {
           summary: v,
-          key,
+          key: year + v.semester_term * 0.1,
           title: `${semTable[year - startYear]}学年第${termTable[v.semester_term - 1]}学期`,
           content: detail.map(v => [v.course_code, limitText(v.course_name, 14),
             parseFloat(v.point).toFixed(1), v.final_grade, this.grade2gpa(v.final_grade).toFixed(1)])

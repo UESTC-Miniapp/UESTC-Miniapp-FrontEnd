@@ -80,18 +80,21 @@ export default {
     if (res.success) {
       res.data.forEach(v => {
         const s = parseInt(v.time[0][1])
-        const text = s < 5 ? '上午' : s < 9 ? '下午' : '晚上'
+        const text = s < 4 ? '上午' : s < 8 ? '下午' : '晚上'
         const st = Math.min(...v.time.map(x => parseFloat(x[1])))
         const ed = Math.max(...v.time.map(x => parseFloat(x[1])))
         const start = st < 2 ? '08:30' : st < 4 ? '10:20' : st < 6 ? '14:30' : st < 8 ? '16:20' : '19:30'
         const end = ed < 2 ? '10:05' : ed < 4 ? '11:55' : ed < 6 ? '16:05' : ed < 8 ? '17:55' : '21:55'
         if (v.time && v.time[0]) {
           courses[v.time[0][0]].list.push(Object.assign({}, v, {
-            time: `周${dateTable[v.time[0][0]]}${text} ${start} 到 ${end}`
+            time: `周${dateTable[v.time[0][0]]}${text} ${start} 到 ${end}`,
+            key: v.time[0][1] // 使用第一节课的索引作为排序依据
           }))
         }
       })
       console.log('[Course Loaded]', courses)
+      // 将课程按照时间进行排列
+      courses = courses.map(v => Object.assign({}, v, { list: v.list.sort((a, b) => a.key > b.key) }))
       this.courses = courses.map(v => Object.assign({}, v, { count: v.list.length }))
     } else {
       message.show({
