@@ -35,10 +35,12 @@
           </a>
         </div>
         <div class="entry-row">
-          <div class="entry">
-            <img src="/static/book.svg" alt="" class="icon">
-            <div class="text">校团活动</div>
-          </div>
+          <a href="/pages/user/main">
+            <div class="entry">
+              <img src="/static/book.svg" alt="" class="icon">
+              <div class="text">个人中心</div>
+            </div>
+          </a>
           <div class="entry">
             <img src="/static/book.svg" alt="" class="icon">
             <div class="text">一卡通</div>
