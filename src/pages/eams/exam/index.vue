@@ -20,6 +20,7 @@ import ExamCard from './ExamCard'
 import api from '@/service/api'
 import db from '@/service/db'
 import { errorCode2Msg } from '../../../utils/error'
+import { currentSemesterID } from '../../../utils/student'
 
 export default {
   data () {
@@ -35,13 +36,8 @@ export default {
 
   async mounted () {
     const { token, username } = await db.get(['token', 'username'])
-    // const startYear = username.slice(0, 4)
-    const sid = 43 // 2014第一学期是43，之后每学年都会递增20
-    const currentDate = new Date()
-    const currentYear = currentDate.getFullYear()
-    const term = currentDate.getMonth() < 8 && currentDate.getMonth() > 2 ? 1 : 0
 
-    const currentsid = ((currentYear - 2014) * 2 - term) * 20 + sid
+    const currentsid = currentSemesterID
 
     const types = ['期末考试', '期中考试', '补考', '缓考']
 
