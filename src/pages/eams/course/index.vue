@@ -94,7 +94,7 @@ export default {
       })
       console.log('[Course Loaded]', courses)
       // 将课程按照时间进行排列
-      courses = courses.map(v => Object.assign({}, v, { list: v.list.sort((a, b) => a.key > b.key) }))
+      courses = courses.map(v => Object.assign({}, v, { list: v.list.sort((a, b) => a.key - b.key) }))
       this.courses = courses.map(v => Object.assign({}, v, { count: v.list.length }))
     } else {
       message.show({

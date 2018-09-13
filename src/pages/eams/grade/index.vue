@@ -94,7 +94,7 @@ export default {
         const key = `${v.semester_year} ${v.semester_term}`
         const year = parseInt(v.semester_year.slice(0, 4))
         // 按学分倒序排列
-        const detail = detailGroupBySemester[key].sort((a, b) => a.point < b.point)
+        const detail = detailGroupBySemester[key].sort((a, b) => b.point - a.point)
         return {
           summary: v,
           key: year + v.semester_term * 0.1,
@@ -102,7 +102,7 @@ export default {
           content: detail.map(v => [v.course_code, limitText(v.course_name, 14),
             parseFloat(v.point).toFixed(1), v.final_grade, this.grade2gpa(v.final_grade).toFixed(1)])
         }
-      }).sort((a, b) => a.key < b.key) // 最新的数据放在最前面
+      }).sort((a, b) => b.key - a.key) // 最新的数据放在最前面
 
       console.log(builtDetail)
 
