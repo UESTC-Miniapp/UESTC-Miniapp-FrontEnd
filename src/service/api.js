@@ -12,7 +12,8 @@ const funcTable = {
   checkToken: 'check_token',
   getGrade: 'grade',
   getCourseTable: 'timetable',
-  getExam: 'exam'
+  getExam: 'exam',
+  getUserInfo: 'person'
 }
 
 const exportFuncs = {}
