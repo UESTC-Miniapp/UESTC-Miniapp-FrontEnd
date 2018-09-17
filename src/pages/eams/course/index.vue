@@ -36,7 +36,7 @@ import { errorCode2Msg } from '../../../utils/error'
 const textTable = ['MON', 'TUES', 'WED', 'THUR', 'FRI', 'SAT', 'SUN']
 const colors = ['rgb(245, 166, 3)', 'rgb(254, 218, 10)', 'rgb(147, 108, 223)', 'rgb(6, 171, 105)', 'rgb(191, 203, 9)', 'rgb(254, 87, 133)', 'rgb(251, 96, 8)']
 const dateTable = ['一', '二', '三', '四', '五', '六', '日']
-const coursesTemplate = new Array(7).fill(0).map((v, i) => {
+const coursesTemplate = () => new Array(7).fill(0).map((v, i) => {
   return {
     list: [],
     count: 0,
@@ -47,7 +47,7 @@ const coursesTemplate = new Array(7).fill(0).map((v, i) => {
 export default {
   data () {
     return {
-      courses: coursesTemplate, // 周一到周五的课表
+      courses: coursesTemplate(), // 周一到周五的课表
       currentIndex: new Date().getDay() - 1 // 当前选中的课表
     }
   },
@@ -76,7 +76,7 @@ export default {
 
     const res = await api.getCourseTable({ token, username, semesterId: '' })
     wx.hideLoading()
-    let courses = coursesTemplate
+    let courses = coursesTemplate()
     if (res.success) {
       res.data.forEach(v => {
         const s = parseInt(v.time[0][1])
