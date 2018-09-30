@@ -48,7 +48,7 @@ export default {
   data () {
     return {
       courses: coursesTemplate(), // 周一到周五的课表
-      currentIndex: new Date().getDay() - 1 // 当前选中的课表
+      currentIndex: (new Date().getDay() + 6) % 7 // 当前选中的课表
     }
   },
   components: {
