@@ -13,7 +13,10 @@ const funcTable = {
   getGrade: 'grade',
   getCourseTable: 'timetable',
   getExam: 'exam',
-  getUserInfo: 'person'
+  getUserInfo: 'person',
+  getEcardInfo: 'ecard/info',
+  getEcardStat: 'ecard/stat',
+  getEcardHistory: 'ecard/history'
 }
 
 const exportFuncs = {}

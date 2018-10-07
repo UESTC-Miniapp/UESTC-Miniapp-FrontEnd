@@ -2,15 +2,15 @@
   <div class="ecard-page">
     <div class="ecard">
       <div class="logo">UESTC</div>
-      <div class="number">2014 000 201010</div>
+      <div class="number">{{ cardNumber }}</div>
       <div class="info">
         <div class="name">
           <div class="title">持卡人姓名</div>
-          <div class="content">张义飞</div>
+          <div class="content">{{ stunumber }}</div>
         </div>
         <div class="expiry">
           <div class="title">有效期</div>
-          <div class="content">2018/02/12</div>
+          <div class="content">{{ expiry }}</div>
         </div>
       </div>
     </div>
@@ -18,15 +18,15 @@
     <div class="money">
       <div class="balance block">
         <div class="title">余额</div>
-        <div class="content">123.5</div>
+        <div class="content">{{ balance }}</div>
       </div>
       <div class="uncashed-balance block">
         <div class="title">待领取</div>
-        <div class="content">100</div>
+        <div class="content">{{ uncashedBalance }}</div>
       </div>
       <div class="block">
         <div class="title">状态</div>
-        <div class="content">正常</div>
+        <div class="content">{{ status }}</div>
       </div>
     </div>
 
@@ -47,38 +47,121 @@
           <div class="price">{{ v.price }}</div>
         </div>
       </div>
+      <div class="loading" v-if="loading">正在加载</div>
     </div>
-
 
   </div>
 </template>
 
 <script>
+import api from '@/service/api'
+import db from '@/service/db'
+
 export default {
   data () {
     return {
+      cardNumber: '*** *** ***',
+      stunumber: '*********',
+      expiry: '****-**-**',
+      balance: '***',
+      uncashedBalance: '***',
+      status: '--',
       chart: [],
-      detailData: []
+      detailData: [],
+      loading: false,
+
+      page: 1,
+      type: 2 // 2=消费|1=充值|3=易支付电控
     }
   },
 
   async onLoad () {
-    const chartData = new Array(15).fill(0).map((v, i) => parseInt(Math.random() * 40))
-    const max = Math.max(...chartData)
-    this.chart = chartData.map((v, i) => {
-      return {
-        height: `height: ${v / max * 100}%`,
-        money: v,
-        date: v,
-        card: v
+    const { token, username } = await db.get(['token', 'username'])
+    wx.showLoading({ title: '正在拉取数据' })
+
+    const info = await api.getEcardInfo({ token, username })
+
+    if (info.success) {
+      this.cardNumber = this.beautifyCardNumber(info.data.number)
+      this.stunumber = username
+      this.expiry = info.data.date
+      this.balance = info.data.balance
+      this.uncashedBalance = info.data.uncashed_balance
+      this.status = info.data.status
+    }
+
+    const chart = await api.getEcardStat({ token, username })
+
+    if (chart.success) {
+      const max = Math.max(...(chart.data.map(v => v[2])))
+      this.chart = chart.data.map((v, i) => {
+        return {
+          height: `height: ${v[2] / max * 100}%`,
+          money: v[2],
+          date: v[0],
+          card: v[1]
+        }
+      })
+    }
+
+    await this.loadDetail()
+
+    wx.hideLoading()
+  },
+
+  async onReachBottom () {
+    if (this.loading) return
+    this.loading = true
+    await this.loadDetail()
+    this.loading = false
+  },
+
+  methods: {
+    /**
+     * 填充卡号
+     * @param{String}: n
+     */
+    beautifyCardNumber (n) {
+      console.log(n)
+      let ret = '000 000 ' + n.slice(0, 3) + ' ' + n.slice(3)
+      console.log(n)
+      return ret
+    },
+    async loadDetail () {
+      wx.showNavigationBarLoading()
+      const { token, username } = await db.get(['token', 'username'])
+
+      const history = await api.getEcardHistory({
+        token,
+        username,
+        page: this.page,
+        type: this.type,
+        date_range: 180
+      })
+
+      if (history.success) {
+        const data = history.data.detail.map ? history.data.detail : Object.values(history.data.detail)
+        this.detailData = this.detailData.concat(data.map(v => {
+          return {
+            date: this.split(v.date, [4, 2, 2]).join('-'),
+            time: this.split(v.time, [2, 2, 2]).join(':'),
+            device: v.device,
+            price: v.price.toFixed(1)
+          }
+        }))
+        this.page += 1
       }
-    })
-    this.detailData = new Array(20).fill({
-      date: '2018-06-23',
-      time: '23:15',
-      device: '硕士21栋超市POS4新增',
-      price: 12.5
-    })
+
+      wx.hideNavigationBarLoading()
+    },
+    split (s, pattern) {
+      s = s.toString()
+      let ret = []
+      for (let i = 0, j = 0; i < s.length && j < pattern.length; i += pattern[j++]) {
+        ret.push(s.slice(i, i + pattern[j]))
+      }
+      return ret
+    }
   }
 }
 </script>
@@ -196,6 +279,7 @@ export default {
         border-bottom: 0.5px solid #eee;
 
         .info {
+          max-width: 80%;
           .device {
             font-size: 16px;
           }
@@ -214,6 +298,13 @@ export default {
           }
         }
       }
+    }
+
+    .loading {
+      font-size: 14px;
+      color: #eee;
+      text-align: center;
+      padding: 10px;
     }
   }
 }

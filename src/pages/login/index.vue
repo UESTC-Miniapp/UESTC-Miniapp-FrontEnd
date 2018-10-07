@@ -148,7 +148,7 @@ export default {
   async onLoad () {
     const { token, username, password } = await db.get(['token', 'username', 'password'])
 
-    wx.navigateTo({ url: '/pages/ecard/main' })
+    // wx.navigateTo({ url: '/pages/ecard/main' })
 
     if (token) {
       // 直接去主页
