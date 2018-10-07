@@ -41,10 +41,12 @@
               <div class="text">个人中心</div>
             </div>
           </a>
-          <div class="entry">
-            <img src="/static/book.svg" alt="" class="icon">
-            <div class="text">一卡通</div>
-          </div>
+          <a href="/pages/ecard/main">
+            <div class="entry">
+              <img src="/static/book.svg" alt="" class="icon">
+              <div class="text">一卡通</div>
+            </div>
+          </a>
           <div class="entry">
             <img src="/static/book.svg" alt="" class="icon">
             <div class="text">签到服务</div>

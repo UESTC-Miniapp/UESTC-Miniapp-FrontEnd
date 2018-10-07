@@ -6,7 +6,8 @@
     "pages/eams/grade/main",
     "pages/eams/course/main",
     "pages/eams/exam/main",
-    "pages/user/main"
+    "pages/user/main",
+    "pages/ecard/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
