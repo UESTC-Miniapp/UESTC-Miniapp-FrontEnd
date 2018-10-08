@@ -33,9 +33,11 @@
     <div class="detail">
       <div class="chart">
         <div class="title">近期消费趋势</div>
-        <div class="content">
-          <div class="bar" v-for="(v, i) in chart" :key="i" :style="v.height"></div>
-        </div>
+        <scroll-view scroll-x>
+          <div class="content">
+            <div class="bar" v-for="(v, i) in chart" :key="i" :style="v.height"></div>
+          </div>
+        </scroll-view>
       </div>
       <div class="list">
         <div class="title">消费详情</div>
@@ -247,18 +249,19 @@ export default {
       .title {
         font-size: 14px;
         color: #aaa;
+        margin-bottom: 20px;
       }
       .content {
-        margin-top: 20px;
+        padding-right: 20px;
         height: 100px;
         display: flex;
         align-items: flex-end;
 
         .bar {
-          width: 10px;
+          min-width: 10px;
           margin: 5px;
           border-radius: 10px;
-          background-color: @main-color;
+          background: linear-gradient(to bottom, rgb(129, 132, 147), rgb(80, 80, 100));
         }
       }
     }
