@@ -33,7 +33,7 @@
     <div class="detail">
       <div class="chart">
         <div class="title">近期消费趋势</div>
-        <scroll-view scroll-x v-if="chart.length > 0">
+        <scroll-view scroll-x v-if="!chartLoading">
           <div class="content">
             <div class="bar" v-for="(v, i) in chart" :key="i" :style="v.height" @tap="showDetail(i)"></div>
           </div>
@@ -55,7 +55,13 @@
           <div class="price">{{ ['+', '-'][type - 1] || '' }}{{ v.price }}</div>
         </div>
       </div>
-      <div class="loading" v-if="loading">正在加载</div>
+      <div class="loading" v-if="loading">
+        <img class="icon" src="/static/ecard/loading.svg" />
+        <div class="text">正在加载 (*- 'v'*)و</div>
+      </div>
+      <div class="loading" v-else>
+        <div class="text">{{ nomore ? '再怎么拉也没有了╮(╯▽╰)╭' : '上拉加载更多╰(●’◡’●)╮' }}</div>
+      </div>
     </div>
 
   </div>
@@ -82,6 +88,8 @@ export default {
       detailData: [],
       loading: false,
 
+      chartLoading: true, // 图表加载状态
+
       ecardTab: [{
         main: '消费',
         data: 2
@@ -95,7 +103,8 @@ export default {
       selected: 0,
 
       page: 1,
-      type: 2 // 2=消费|1=充值|3=易支付电控
+      type: 2, // 2=消费|1=充值|3=易支付电控
+      nomore: false
     }
   },
 
@@ -108,14 +117,14 @@ export default {
   },
 
   onPullDownRefresh () {
+    this.page = 1
+    this.nomore = false
     this.loadData()
   },
 
   async onReachBottom () {
-    if (this.loading) return
-    this.loading = true
+    if (this.loading || this.nomore) return
     await this.loadDetail()
-    this.loading = false
   },
 
   methods: {
@@ -132,7 +141,6 @@ export default {
 
     async loadData () {
       tabDataCached = {} // 清空缓存
-      wx.showLoading({ title: '正在拉取数据' })
 
       // 将await方法包装成promise
       await Promise.all([this.loadInfo, this.loadChart, this.loadDetail]
@@ -145,7 +153,7 @@ export default {
           }
           resolve()
         })))
-      wx.hideLoading()
+      wx.stopPullDownRefresh()
     },
 
     async loadInfo () {
@@ -165,6 +173,7 @@ export default {
     },
 
     async loadChart () {
+      this.chartLoading = true
       const { token, username } = await db.get(['token', 'username'])
       const chart = await api.getEcardStat({ token, username })
 
@@ -180,11 +189,14 @@ export default {
         })
       }
 
+      this.chartLoading = false
+
       return true
     },
 
     async loadDetail () {
-      wx.showNavigationBarLoading()
+      if (this.nomore) return
+
       this.loading = true
       const { token, username } = await db.get(['token', 'username'])
 
@@ -207,10 +219,10 @@ export default {
           }
         }))
         this.page += 1
+        this.nomore = data.length === 0
       }
 
       this.loading = false
-      wx.hideNavigationBarLoading()
 
       return true
     },
@@ -231,16 +243,19 @@ export default {
       const index = this.ecardTab[i].data
       tabDataCached[this.type] = {
         page: this.page,
-        detailData: this.detailData
+        detailData: this.detailData,
+        nomore: this.nomore
       }
       this.type = index
       if (!tabDataCached[index]) {
         this.page = 1
         this.detailData = []
+        this.nomore = false
         this.loadDetail()
       } else {
         this.page = tabDataCached[index].page
         this.detailData = tabDataCached[index].detailData
+        this.nomore = tabDataCached[index].nomore
       }
       this.selected = i
     }
@@ -396,9 +411,17 @@ export default {
 
     .loading {
       font-size: 14px;
-      color: #eee;
-      text-align: center;
-      padding: 10px;
+      color: #aaa;
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .icon {
+        height: 14px;
+        width: 14px;
+        margin-right: 5px;
+      }
     }
   }
 }

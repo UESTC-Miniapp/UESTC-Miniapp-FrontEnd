@@ -150,6 +150,9 @@ export default {
 
     // wx.navigateTo({ url: '/pages/ecard/main' })
 
+    this.stunumber = username
+    this.password = password
+
     if (token) {
       // 直接去主页
     } else if (username && password) {
@@ -158,8 +161,8 @@ export default {
       this.stunumber = username
       this.password = password
       if (res.success) {
-        // await db.set({ token: res.token })
-        // wx.navigateTo('/pages/home/main')
+        await db.set({ token: res.token })
+        wx.navigateTo('/pages/home/main')
       }
     }
   }
