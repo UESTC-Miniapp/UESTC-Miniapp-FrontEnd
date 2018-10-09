@@ -10,30 +10,30 @@
             <open-data type="userAvatarUrl"></open-data>
           </div>
           <div class="line user-info">
-            <div class="name">{{ info.name }}({{ info.ename }})</div>
-            <div class="number">{{ info.number }}</div>
+            <div class="name">{{ info.name || '***' }}({{ info.ename || '*** ***' }})</div>
+            <div class="number">{{ info.number || '*************' }}</div>
           </div>
         </div>
         <div class="info-detail">
           <div class="info-row">
             <div class="info-row-label">专业</div>
-            <div class="info-row-content">{{ info.major }}</div>
+            <div class="info-row-content">{{ info.major || '*******' }}</div>
           </div>
           <div class="info-row">
             <div class="info-row-label">院系</div>
-            <div class="info-row-content">{{ info.college }}</div>
+            <div class="info-row-content">{{ info.college || '*******' }}</div>
           </div>
           <div class="info-row">
             <div class="info-row-label">状态</div>
-            <div class="info-row-content">{{ info.status }}</div>
+            <div class="info-row-content">{{ info.status || '**' }}</div>
           </div>
           <div class="info-row">
             <div class="info-row-label">类型</div>
-            <div class="info-row-content">{{ info.type }}</div>
+            <div class="info-row-content">{{ info.type || '****' }}</div>
           </div>
           <div class="info-row">
             <div class="info-row-label">校区</div>
-            <div class="info-row-content">{{ info.campus }}</div>
+            <div class="info-row-content">{{ info.campus || '*******' }}</div>
           </div>
         </div>
       </div>
@@ -97,7 +97,12 @@ export default {
     onLogout () {
       wx.showModal({
         title: '确认退出登录',
-        content: '退出登录后会返回到主界面'
+        content: '退出登录后会返回到主界面',
+        success: res => {
+          if (res.confirm) {
+            wx.redirectTo({ url: '/pages/login/main' })
+          }
+        }
       })
     }
   },

@@ -21,10 +21,10 @@
               <div class="text">课程表</div>
             </div>
           </a>
-          <a href="/pages/login/main">
+          <a href="/pages/ecard/main">
             <div class="entry">
               <img src="/static/book.svg" alt="" class="icon">
-              <div class="text">退出登录</div>
+              <div class="text">一卡通</div>
             </div>
           </a>
           <a href="/pages/eams/exam/main">
@@ -41,10 +41,10 @@
               <div class="text">个人中心</div>
             </div>
           </a>
-          <a href="/pages/ecard/main">
+          <a href="/pages/login/main">
             <div class="entry">
               <img src="/static/book.svg" alt="" class="icon">
-              <div class="text">一卡通</div>
+              <div class="text">退出登录</div>
             </div>
           </a>
           <div class="entry">
