@@ -33,20 +33,26 @@
     <div class="detail">
       <div class="chart">
         <div class="title">近期消费趋势</div>
-        <scroll-view scroll-x>
+        <scroll-view scroll-x v-if="chart.length > 0">
           <div class="content">
-            <div class="bar" v-for="(v, i) in chart" :key="i" :style="v.height"></div>
+            <div class="bar" v-for="(v, i) in chart" :key="i" :style="v.height" @tap="showDetail(i)"></div>
           </div>
         </scroll-view>
+        <div class="content-loading" v-else>
+          <img src="/static/ecard/loading.svg" alt="" class="icon">
+        </div>
       </div>
       <div class="list">
         <div class="title">消费详情</div>
+        <div class="tab">
+          <EcardTab :tabs="ecardTab" @tabchange="onTabChange" :selected="selected"></EcardTab>
+        </div>
         <div class="item" v-for="(v, i) in detailData" :key="i">
           <div class="info">
             <div class="device">{{ v.device }}</div>
             <div class="time">{{ v.date }} {{ v.time }}</div>
           </div>
-          <div class="price">{{ v.price }}</div>
+          <div class="price">{{ ['+', '-'][type - 1] || '' }}{{ v.price }}</div>
         </div>
       </div>
       <div class="loading" v-if="loading">正在加载</div>
@@ -58,6 +64,10 @@
 <script>
 import api from '@/service/api'
 import db from '@/service/db'
+
+import Tab from '@/components/Tab'
+
+let tabDataCached = {} // 用来存放 消费/充值/电控的缓存数据
 
 export default {
   data () {
@@ -72,43 +82,33 @@ export default {
       detailData: [],
       loading: false,
 
+      ecardTab: [{
+        main: '消费',
+        data: 2
+      }, {
+        main: '充值',
+        data: 1
+      }, {
+        main: '电控',
+        data: 3
+      }],
+      selected: 0,
+
       page: 1,
       type: 2 // 2=消费|1=充值|3=易支付电控
     }
   },
 
-  async onLoad () {
-    const { token, username } = await db.get(['token', 'username'])
-    wx.showLoading({ title: '正在拉取数据' })
+  components: {
+    EcardTab: Tab
+  },
 
-    const info = await api.getEcardInfo({ token, username })
+  onLoad () {
+    this.loadData()
+  },
 
-    if (info.success) {
-      this.cardNumber = this.beautifyCardNumber(info.data.number)
-      this.stunumber = username
-      this.expiry = info.data.date
-      this.balance = info.data.balance
-      this.uncashedBalance = info.data.uncashed_balance
-      this.status = info.data.status
-    }
-
-    const chart = await api.getEcardStat({ token, username })
-
-    if (chart.success) {
-      const max = Math.max(...(chart.data.map(v => v[2])))
-      this.chart = chart.data.map((v, i) => {
-        return {
-          height: `height: ${v[2] / max * 100}%`,
-          money: v[2],
-          date: v[0],
-          card: v[1]
-        }
-      })
-    }
-
-    await this.loadDetail()
-
-    wx.hideLoading()
+  onPullDownRefresh () {
+    this.loadData()
   },
 
   async onReachBottom () {
@@ -129,8 +129,63 @@ export default {
       console.log(n)
       return ret
     },
+
+    async loadData () {
+      tabDataCached = {} // 清空缓存
+      wx.showLoading({ title: '正在拉取数据' })
+
+      // 将await方法包装成promise
+      await Promise.all([this.loadInfo, this.loadChart, this.loadDetail]
+        .map(f => new Promise(async (resolve, reject) => {
+          try {
+            await f()
+          } catch (error) {
+            console.log('error', error)
+            resolve()
+          }
+          resolve()
+        })))
+      wx.hideLoading()
+    },
+
+    async loadInfo () {
+      const { token, username } = await db.get(['token', 'username'])
+      const info = await api.getEcardInfo({ token, username })
+
+      if (info.success) {
+        this.cardNumber = this.beautifyCardNumber(info.data.number)
+        this.stunumber = info.data.nickname
+        this.expiry = info.data.date
+        this.balance = info.data.balance
+        this.uncashedBalance = parseFloat(info.data.uncashed_balance).toFixed(2)
+        this.status = info.data.status
+      }
+
+      return true
+    },
+
+    async loadChart () {
+      const { token, username } = await db.get(['token', 'username'])
+      const chart = await api.getEcardStat({ token, username })
+
+      if (chart.success) {
+        const max = Math.max(...(chart.data.map(v => v[2])))
+        this.chart = chart.data.map((v, i) => {
+          return {
+            height: `height: ${v[2] / max * 100}%`,
+            money: v[2],
+            date: v[0],
+            card: v[1]
+          }
+        })
+      }
+
+      return true
+    },
+
     async loadDetail () {
       wx.showNavigationBarLoading()
+      this.loading = true
       const { token, username } = await db.get(['token', 'username'])
 
       const history = await api.getEcardHistory({
@@ -154,7 +209,10 @@ export default {
         this.page += 1
       }
 
+      this.loading = false
       wx.hideNavigationBarLoading()
+
+      return true
     },
     split (s, pattern) {
       s = s.toString()
@@ -163,6 +221,28 @@ export default {
         ret.push(s.slice(i, i + pattern[j]))
       }
       return ret
+    },
+    showDetail (index) {
+      const date = this.split(this.chart[index].date, [4, 2, 2]).join('-')
+      const money = this.chart[index].money
+      wx.showToast({ title: `${date}共消费${money.toFixed(1)}元`, icon: 'none' })
+    },
+    onTabChange (i) {
+      const index = this.ecardTab[i].data
+      tabDataCached[this.type] = {
+        page: this.page,
+        detailData: this.detailData
+      }
+      this.type = index
+      if (!tabDataCached[index]) {
+        this.page = 1
+        this.detailData = []
+        this.loadDetail()
+      } else {
+        this.page = tabDataCached[index].page
+        this.detailData = tabDataCached[index].detailData
+      }
+      this.selected = i
     }
   }
 }
@@ -243,25 +323,33 @@ export default {
     padding: 20px 0;
 
     .chart {
-      margin-left: 20px;
-      margin-top: 10px;
-      margin-bottom: 10px;
+      margin: 10px 20px;
       .title {
         font-size: 14px;
         color: #aaa;
         margin-bottom: 20px;
       }
       .content {
-        padding-right: 20px;
         height: 100px;
         display: flex;
         align-items: flex-end;
 
         .bar {
           min-width: 10px;
-          margin: 5px;
+          margin: 0 5px;
           border-radius: 10px;
           background: linear-gradient(to bottom, rgb(129, 132, 147), rgb(80, 80, 100));
+        }
+      }
+      .content-loading {
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .icon {
+          height: 40px;
+          width: 40px;
         }
       }
     }
@@ -275,6 +363,13 @@ export default {
         margin-top: 30px;
         margin-bottom: 10px;
       }
+
+      .tab {
+        background-color: #fff;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+
       .item {
         display: flex;
         justify-content: space-between;
@@ -295,10 +390,6 @@ export default {
 
         .price {
           font-size: 24px;
-
-          &:before {
-            content: '-';
-          }
         }
       }
     }
