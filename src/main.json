@@ -2,7 +2,6 @@
   "pages": [
     "pages/home/main",
     "pages/login/main",
-    "pages/index/main",
     "pages/eams/grade/main",
     "pages/eams/course/main",
     "pages/eams/exam/main",

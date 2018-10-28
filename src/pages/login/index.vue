@@ -172,6 +172,8 @@ export default {
 <style scoped lang="less">
 @import '../../style/common.less';
 
+@main-color: #4DAEA4;
+
 .login-page {
   background-color: #aaa;
   position: absolute;
