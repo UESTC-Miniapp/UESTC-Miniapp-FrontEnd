@@ -6,7 +6,9 @@
 
     <div class="content">
       <SummaryCard :averGPA="summary.aver_gpa" :courseCount="summary.course_count"
-        :sumPoint="summary.sum_point" :semesterSummary="semesterSummary"/>
+        :sumPoint="summary.sum_point" :semesterSummary="semesterSummary" :loading="loading"/>
+      <FakeCard v-if="loading" />
+      <FakeCard v-if="loading" />
       <GradeCard :title="item.title" :header="gradeHeader" :content="item.content"
         :styles="gradeStyles" v-for="(item, index) in semesterDetail" :key="index"
         :summary="item.summary"/>
@@ -17,6 +19,7 @@
 <script>
 import Header from '@/components/Header'
 import Message from '@/components/Message'
+import FakeCard from '@/components/FakeCard'
 import GradeCard from './GradeCard'
 import SummaryCard from './SummaryCard'
 
@@ -39,27 +42,32 @@ export default {
       gradeHeader,
       summary: {}, // 总览
       semesterSummary: [], // 学期总览
-      semesterDetail: [] // 学期详情
+      semesterDetail: [], // 学期详情
+      loading: true
     }
   },
   components: {
     GradeHeader: Header,
     GradeCard,
     SummaryCard,
-    Message
+    Message,
+    FakeCard
   },
   async mounted () {
     const message = this.$children[0]
     const { token, username } = await db.get(['token', 'username'])
-    wx.showLoading({ title: '正在拉取数据' })
+    this.loading = true
+
+    this.semesterSummary = []
 
     const res = await api.getGrade({ username, token })
-    wx.hideLoading()
+
     if (res.success) {
       this.summary = res.data.summary
       const { summary, detail } = this.buildDetail(res.data, username)
       this.semesterSummary = summary
       this.semesterDetail = detail
+      this.loading = false
     } else {
       message.show({
         title: '出错了',
@@ -141,7 +149,7 @@ export default {
 .grade-page {
   .content {
     padding: 0 10px;
-    margin-top: -25px;
+    margin-top: -50px;
     margin-bottom: 30px;
   }
 }

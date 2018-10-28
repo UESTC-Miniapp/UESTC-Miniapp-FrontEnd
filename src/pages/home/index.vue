@@ -58,6 +58,8 @@
         </div>
       </div>
 
+      <FakeCard />
+
       <GradeCard title="成绩" :header="gradeHeader" :content="gradeContent" :styles="styles"/>
     </div>
   </div>
@@ -68,6 +70,7 @@ import db from '../../service/db'
 import api from '../../service/api'
 
 import Header from '@/components/Header'
+import FakeCard from '@/components/FakeCard'
 import GradeCard from '../eams/grade/GradeCard'
 
 export default {
@@ -89,7 +92,8 @@ export default {
 
   components: {
     HomeHeader: Header,
-    GradeCard
+    GradeCard,
+    FakeCard
   },
 
   async onLoad () {
