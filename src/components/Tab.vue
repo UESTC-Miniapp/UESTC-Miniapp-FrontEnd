@@ -38,6 +38,7 @@ export default {
       border-radius: 5px;
       background: linear-gradient(to right, #eee, #ddd);
       margin-right: 10px;
+      min-width: 40px;
 
       .main {
         font-size: 18px;
