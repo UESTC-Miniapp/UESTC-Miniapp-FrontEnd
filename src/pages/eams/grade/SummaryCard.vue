@@ -5,30 +5,35 @@
       <span>成绩总览</span>
     </div>
     <div class="card-content">
-      <div class="row" v-for="(v, index) in semesterSummary" :key="index"
-        @tap="showInfo(v.title, v.aver_gpa, v.aver_grade)">
-        <div class="title">{{ v.title}}</div>
-        <div class="bar-chart">
-          <div class="bar" :style="'width:' + v.aver_gpa / 4 * 100 + '%'"></div>
-          <div class="bar" :style="'width:' + v.aver_grade + '%'"></div>
-        </div>
-      </div>
       <div class="loading-block" v-if="loading">
-        <img class="loading-icon" src="/static/ecard/loading.svg" />
+        <img class="loading-icon" src="/static/loading.svg" />
+      </div>
+      <div v-else>
+        <div class="row" v-for="(v, index) in semesterSummary" :key="index"
+          @tap="showInfo(v.title, v.aver_gpa, v.aver_grade)">
+          <div class="title">{{ v.title}}</div>
+          <div class="bar-chart">
+            <div class="bar" :style="'width:' + v.aver_gpa / 4 * 100 + '%'"></div>
+            <div class="bar" :style="'width:' + v.aver_grade + '%'"></div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="card-footer">
       <div class="footer-block">
         <div class="title">综合GPA</div>
-        <div class="content">{{ averGPA || '*.**' }}</div>
+        <div class="fake-text" v-if="loading"></div>
+        <div class="content" v-else>{{ averGPA }}</div>
       </div>
       <div class="footer-block">
         <div class="title">已修科目</div>
-        <div class="content">{{ courseCount || '**' }}</div>
+        <div class="fake-text" v-if="loading"></div>
+        <div class="content" v-else>{{ courseCount }}</div>
       </div>
       <div class="footer-block">
         <div class="title">已修学分</div>
-        <div class="content">{{ sumPoint || '**.**' }}</div>
+        <div class="fake-text" v-if="loading"></div>
+        <div class="content" v-else>{{ sumPoint }}</div>
       </div>
     </div>
   </div>
@@ -69,8 +74,8 @@ export default {
       height: 70px;
 
       .loading-icon {
-        height: 15px;
-        width: 15px;
+        height: 25px;
+        width: 25px;
       }
     }
 

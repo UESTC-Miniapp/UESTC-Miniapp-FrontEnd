@@ -7,11 +7,18 @@
     <div class="content">
       <SummaryCard :averGPA="summary.aver_gpa" :courseCount="summary.course_count"
         :sumPoint="summary.sum_point" :semesterSummary="semesterSummary" :loading="loading"/>
-      <FakeCard v-if="loading" />
-      <FakeCard v-if="loading" />
-      <GradeCard :title="item.title" :header="gradeHeader" :content="item.content"
-        :styles="gradeStyles" v-for="(item, index) in semesterDetail" :key="index"
-        :summary="item.summary"/>
+
+      <div class="grade-loading" v-if="loading">
+        <FakeCard v-for="(k, i) in [1, 2, 3]" :key="i"/>
+      </div>
+
+      <div class="grade-detail" v-else>
+        <GradeCard :title="item.title" :header="gradeHeader" :content="item.content"
+          :styles="gradeStyles" v-for="(item, index) in semesterDetail" :key="index"
+          :summary="item.summary"/>
+      </div>
+
+      <NoDataCard v-if="nodata" />
     </div>
   </div>
 </template>
@@ -20,6 +27,7 @@
 import Header from '@/components/Header'
 import Message from '@/components/Message'
 import FakeCard from '@/components/FakeCard'
+import NoDataCard from '@/components/NoDataCard'
 import GradeCard from './GradeCard'
 import SummaryCard from './SummaryCard'
 
@@ -43,7 +51,8 @@ export default {
       summary: {}, // 总览
       semesterSummary: [], // 学期总览
       semesterDetail: [], // 学期详情
-      loading: true
+      loading: true,
+      nodata: false
     }
   },
   components: {
@@ -51,7 +60,8 @@ export default {
     GradeCard,
     SummaryCard,
     Message,
-    FakeCard
+    FakeCard,
+    NoDataCard
   },
   async mounted () {
     const message = this.$children[0]
@@ -67,6 +77,7 @@ export default {
       const { summary, detail } = this.buildDetail(res.data, username)
       this.semesterSummary = summary
       this.semesterDetail = detail
+      this.nodata = detail.length === 0
       this.loading = false
     } else {
       message.show({

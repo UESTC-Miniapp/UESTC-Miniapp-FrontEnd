@@ -3,11 +3,23 @@
 @ok-color: #4DAEA4;
 @wrong-color: #FA6E79;
 
+@keyframes fade-in {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0);
+    opacity: 1;
+  }
+}
+
 .card {
   background-color: #fff;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
   border-radius: 3px;
   padding: 10px 20px;
+  animation: .3s ease fade-in;
 
   .card-icon {
     height: 20px;

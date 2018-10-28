@@ -101,7 +101,7 @@ export default {
 
     console.debug('[Home loaded]', token, username)
 
-    wx.showLoading({ title: '正在检查登录有效性' })
+    // wx.showLoading({ title: '正在检查登录有效性' })
 
     // 首先检查是否已登录
     if (!token || !username) {

@@ -9,15 +9,18 @@
         <div class="selector-block" :class="[index === currentIndex ? 'today' : '']"
           v-for="(item, index) in courses" :key="index" @tap="onTap(index)">
           <div class="selector-text">{{ item.text }}</div>
-          <div class="selector-count">{{ item.count }}</div>
+          <div class="selector-count">
+            <img src="/static/loading-white.svg" alt="" v-if="loading" class="loading-icon">
+            <div v-else>{{ item.count }}</div>
+          </div>
         </div>
       </div>
       <div class="course-container">
         <CourseCard v-for="(item, index) in currentCourses" :key="index"
           :title="item.time" :content="item.courseName" :time="item.date"
           :teacher="item.teacher" :address="item.room"/>
-        <CourseCard title="舒服了" content="今天没得课上" time="有"
-          address="点" teacher="爽" v-if="currentCourses.length === 0"/>
+        <FakeCard v-if="loading" v-for="(k, i) in [1, 2, 3]" :key="i"/>
+        <NoDataCard v-if="currentCourses.length === 0 && !loading"/>
       </div>
     </div>
   </div>
@@ -26,12 +29,13 @@
 <script>
 import Header from '@/components/Header'
 import Message from '@/components/Message'
+import FakeCard from '@/components/FakeCard'
+import NoDataCard from '@/components/NoDataCard'
 import CourseCard from './CourseCard'
 
 import api from '@/service/api'
 import db from '@/service/db'
 import { errorCode2Msg } from '../../../utils/error'
-// import { limitText } from '../../../utils/text'
 
 const textTable = ['MON', 'TUES', 'WED', 'THUR', 'FRI', 'SAT', 'SUN']
 const colors = ['rgb(245, 166, 3)', 'rgb(254, 218, 10)', 'rgb(147, 108, 223)', 'rgb(6, 171, 105)', 'rgb(191, 203, 9)', 'rgb(254, 87, 133)', 'rgb(251, 96, 8)']
@@ -47,14 +51,17 @@ const coursesTemplate = () => new Array(7).fill(0).map((v, i) => {
 export default {
   data () {
     return {
+      loading: true,
       courses: coursesTemplate(), // 周一到周五的课表
-      currentIndex: (new Date().getDay() + 6) % 7 // 当前选中的课表
+      currentIndex: -1 // 当前选中的课表
     }
   },
   components: {
     CourseHeader: Header,
     Message,
-    CourseCard
+    CourseCard,
+    FakeCard,
+    NoDataCard
   },
   computed: {
     currentCourses () {
@@ -72,10 +79,11 @@ export default {
   async mounted () {
     const { token, username } = await db.get(['token', 'username'])
     const message = this.$children[0]
-    wx.showLoading({ title: '正在拉取数据' })
+
+    this.loading = true
 
     const res = await api.getCourseTable({ token, username, semesterId: '' })
-    wx.hideLoading()
+    this.loading = false
     let courses = coursesTemplate()
     if (res.success) {
       res.data.forEach(v => {
@@ -96,6 +104,7 @@ export default {
       // 将课程按照时间进行排列
       courses = courses.map(v => Object.assign({}, v, { list: v.list.sort((a, b) => a.key - b.key) }))
       this.courses = courses.map(v => Object.assign({}, v, { count: v.list.length }))
+      this.currentIndex = (new Date().getDay() + 6) % 7 // 选中今天的课表
     } else {
       message.show({
         title: '出错了',
@@ -120,8 +129,7 @@ export default {
       justify-content: space-around;
 
       .today {
-        height: 100px!important;
-        margin-top: -20px;
+        transform: translateY(-20px);
       }
 
       .selector-block {
@@ -134,6 +142,8 @@ export default {
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
         text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        padding-bottom: 20px;
+        transition: transform .3s ease;
 
         .loop(@i) when (@i > 0) {
           &:nth-child(@{i}) {
@@ -151,6 +161,13 @@ export default {
         .selector-count {
           margin-top: 10px;
           font-size: 20px;
+          display: flex;
+          justify-content: center;
+
+          .loading-icon {
+            height: 20px;
+            width: 20px;
+          }
         }
       }
     }
@@ -159,6 +176,10 @@ export default {
       padding: 10px;
       background-color: #fff;
       min-height: 200px;
+      background:#fff;
+      padding-top: 20px;
+      margin-top: -20px;
+      transform: scale(1);
     }
   }
 }
