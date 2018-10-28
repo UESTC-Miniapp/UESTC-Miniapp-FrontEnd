@@ -117,9 +117,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import "../../../style/common.less";
+
 .exam-page {
   .tab {
     padding: 10px;
+    margin-top: -30px;
   }
   .content {
     padding: 10px;

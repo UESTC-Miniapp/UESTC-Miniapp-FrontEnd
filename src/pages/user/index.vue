@@ -10,30 +10,51 @@
             <open-data type="userAvatarUrl"></open-data>
           </div>
           <div class="line user-info">
-            <div class="name">{{ info.name || '***' }}({{ info.ename || '*** ***' }})</div>
-            <div class="number">{{ info.number || '*************' }}</div>
+            <div class="loading" v-if="loading">
+              <div class="fake-text"></div>
+              <div class="fake-text"></div>
+            </div>
+            <div v-else>
+              <div class="name">{{ info.name || '***' }}({{ info.ename || '*** ***' }})</div>
+              <div class="number">{{ info.number || '*************' }}</div>
+            </div>
           </div>
         </div>
         <div class="info-detail">
           <div class="info-row">
             <div class="info-row-label">专业</div>
-            <div class="info-row-content">{{ info.major || '*******' }}</div>
+            <div class="info-row-content">
+              <div class="fake-text" v-if="loading"></div>
+              <div v-else>{{ info.major || '*******' }}</div>
+            </div>
           </div>
           <div class="info-row">
             <div class="info-row-label">院系</div>
-            <div class="info-row-content">{{ info.college || '*******' }}</div>
+            <div class="info-row-content">
+              <div class="fake-text" v-if="loading"></div>
+              <div v-else>{{ info.college || '*******' }}</div>
+            </div>
           </div>
           <div class="info-row">
             <div class="info-row-label">状态</div>
-            <div class="info-row-content">{{ info.status || '**' }}</div>
+            <div class="info-row-content">
+              <div class="fake-text" v-if="loading"></div>
+              <div v-else>{{ info.status || '**' }}</div>
+            </div>
           </div>
           <div class="info-row">
             <div class="info-row-label">类型</div>
-            <div class="info-row-content">{{ info.type || '****' }}</div>
+            <div class="info-row-content">
+              <div class="fake-text" v-if="loading"></div>
+              <div v-else>{{ info.type || '****' }}</div>
+            </div>
           </div>
           <div class="info-row">
             <div class="info-row-label">校区</div>
-            <div class="info-row-content">{{ info.campus || '*******' }}</div>
+            <div class="info-row-content">
+              <div class="fake-text" v-if="loading"></div>
+              <div v-else>{{ info.campus || '*******' }}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -66,6 +87,7 @@ export default {
     return {
       info: {},
       avatar: null,
+      loading: true,
 
       settings: {
         isLinked: false
@@ -107,7 +129,7 @@ export default {
     }
   },
   async mounted () {
-    wx.showLoading({ title: '正在拉取数据' })
+    this.loading = true
     const { token, username } = await db.get(['token', 'username'])
     const res = await api.getUserInfo({ token, username })
 
@@ -120,7 +142,7 @@ export default {
         duration: 3000
       })
     }
-    wx.hideLoading()
+    this.loading = false
   }
 }
 </script>
@@ -150,6 +172,7 @@ export default {
 
         .user-info {
           padding: 0 20px;
+          min-width: 40%;
 
           .name {
             color: #000;
@@ -176,6 +199,9 @@ export default {
             min-width: 80px;
             margin-right: 20px;
             text-align: right;
+          }
+          .info-row-content {
+            width: 100%;
           }
         }
       }
