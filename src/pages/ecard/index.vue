@@ -354,6 +354,7 @@ export default {
           margin: 0 5px;
           border-radius: 10px;
           background: linear-gradient(to bottom, rgb(129, 132, 147), rgb(80, 80, 100));
+          animation: scale-in ease .3s;
         }
       }
       .content-loading {
@@ -423,6 +424,15 @@ export default {
         margin-right: 5px;
       }
     }
+  }
+}
+
+@keyframes scale-in {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
   }
 }
 </style>

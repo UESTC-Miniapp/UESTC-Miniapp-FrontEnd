@@ -1,7 +1,7 @@
 <template>
   <div class="summary-card">
     <div class="card-title">
-      <img src="/static/book.svg" alt="" class="card-icon">
+      <img src="/static/entry/grade.svg" alt="" class="card-icon">
       <span>成绩总览</span>
     </div>
     <div class="card-content">

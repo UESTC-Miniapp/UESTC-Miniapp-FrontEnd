@@ -11,56 +11,55 @@
         <div class="entry-row">
           <a href="/pages/eams/grade/main">
             <div class="entry">
-              <img src="/static/book.svg" alt="" class="icon">
+              <img src="/static/entry/grade.svg" alt="" class="icon">
               <div class="text">成绩查询</div>
             </div>
           </a>
           <a href="/pages/eams/course/main">
             <div class="entry">
-              <img src="/static/book.svg" alt="" class="icon">
+              <img src="/static/entry/course.svg" alt="" class="icon">
               <div class="text">课程表</div>
-            </div>
-          </a>
-          <a href="/pages/ecard/main">
-            <div class="entry">
-              <img src="/static/book.svg" alt="" class="icon">
-              <div class="text">一卡通</div>
             </div>
           </a>
           <a href="/pages/eams/exam/main">
             <div class="entry">
-              <img src="/static/book.svg" alt="" class="icon">
+              <img src="/static/entry/exam.svg" alt="" class="icon">
               <div class="text">考试</div>
+            </div>
+          </a>
+          <a href="/pages/ecard/main">
+            <div class="entry">
+              <img src="/static/entry/ecard.svg" alt="" class="icon">
+              <div class="text">一卡通</div>
             </div>
           </a>
         </div>
         <div class="entry-row">
           <a href="/pages/user/main">
             <div class="entry">
-              <img src="/static/book.svg" alt="" class="icon">
+              <img src="/static/entry/user.svg" alt="" class="icon">
               <div class="text">个人中心</div>
             </div>
           </a>
-          <a href="/pages/login/main">
-            <div class="entry">
-              <img src="/static/book.svg" alt="" class="icon">
-              <div class="text">退出登录</div>
-            </div>
-          </a>
           <div class="entry">
-            <img src="/static/book.svg" alt="" class="icon">
+            <img src="/static/entry/come.svg" alt="" class="icon">
             <div class="text">签到服务</div>
           </div>
           <div class="entry">
-            <img src="/static/book.svg" alt="" class="icon">
+            <img src="/static/entry/other.svg" alt="" class="icon">
             <div class="text">其他</div>
           </div>
+          <a href="/pages/login/main">
+            <div class="entry">
+              <img src="/static/entry/logout.svg" alt="" class="icon">
+              <div class="text">退出登录</div>
+            </div>
+          </a>
         </div>
       </div>
 
       <FakeCard />
-
-      <GradeCard title="成绩" :header="gradeHeader" :content="gradeContent" :styles="styles"/>
+      <NoDataCard />
     </div>
   </div>
 </template>
@@ -71,29 +70,17 @@ import api from '../../service/api'
 
 import Header from '@/components/Header'
 import FakeCard from '@/components/FakeCard'
-import GradeCard from '../eams/grade/GradeCard'
+import NoDataCard from '@/components/NoDataCard'
 
 export default {
   data () {
-    return {
-      gradeHeader: ['课程代码', '课程名称', '学分', '成绩', '绩点'],
-      gradeContent: [
-        ['C1000011', '管理与领导学', 2, 90, 4.0],
-        ['C1000011', '管理与领导学', 2, 90, 4.0],
-        ['C1000011', '管理与领导学', 2, 90, 4.0],
-        ['C1000011', '管理与领导学', 2, 90, 4.0],
-        ['C1000011', '管理与领导学', 2, 90, 4.0]
-      ],
-      styles: new Array(5).fill({ width: '32%', align: 'l' }).map((v, i) => {
-        return i >= 2 ? Object.assign({}, v, { width: '12%', align: 'c' }) : v
-      })
-    }
+    return { }
   },
 
   components: {
     HomeHeader: Header,
-    GradeCard,
-    FakeCard
+    FakeCard,
+    NoDataCard
   },
 
   async onLoad () {
@@ -127,6 +114,7 @@ export default {
   .content {
     padding: 0 10px;
     margin-top: -25px;
+    padding-bottom: 10px;
 
     .search-box {
       padding: 15px 20px;
@@ -176,18 +164,10 @@ export default {
           font-size: 14px;
           width: 100%;
           text-align: center;
-          color: #666;
+          color: #aaa;
+          font-weight: bold;
         }
       }
-    }
-
-    .test-card {
-      margin-top: 20px;
-      min-height: 200px;
-      color: @main-color;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
   }
 }

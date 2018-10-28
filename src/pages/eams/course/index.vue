@@ -16,11 +16,15 @@
         </div>
       </div>
       <div class="course-container">
-        <CourseCard v-for="(item, index) in currentCourses" :key="index"
-          :title="item.time" :content="item.courseName" :time="item.date"
-          :teacher="item.teacher" :address="item.room"/>
-        <FakeCard v-if="loading" v-for="(k, i) in [1, 2, 3]" :key="i"/>
-        <NoDataCard v-if="currentCourses.length === 0 && !loading"/>
+        <div class="loading-block" v-if="loading">
+          <FakeCard v-for="(k, i) in [1, 2, 3]" :key="i"/>
+        </div>
+        <NoDataCard v-else-if="currentCourses.length === 0 && !loading"/>
+        <div v-else>
+          <CourseCard v-for="(item, index) in currentCourses" :key="index"
+            :title="item.time" :content="item.courseName" :time="item.date"
+            :teacher="item.teacher" :address="item.room"/>
+        </div>
       </div>
     </div>
   </div>

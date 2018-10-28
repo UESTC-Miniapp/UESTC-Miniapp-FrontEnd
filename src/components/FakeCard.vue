@@ -6,26 +6,16 @@
     </div>
 
     <div class="card-content">
-      <div class="fake-text" v-for="(i, index) in lines" :key="index"></div>
+      <div class="fake-text"></div>
+      <div class="fake-text"></div>
+      <div class="fake-text"></div>
+      <div class="fake-text"></div>
     </div>
   </div>
 </template>
 
 <script>
-export default {
-  props: {
-    fakeLines: {
-      type: Number,
-      default: 5
-    }
-  },
-
-  computed: {
-    lines () {
-      return new Array(this.fakeLines || 5).fill(0)
-    }
-  }
-}
+export default { }
 </script>
 
 <style lang="less" scoped>

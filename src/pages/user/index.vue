@@ -15,8 +15,8 @@
               <div class="fake-text"></div>
             </div>
             <div v-else>
-              <div class="name">{{ info.name || '***' }}({{ info.ename || '*** ***' }})</div>
-              <div class="number">{{ info.number || '*************' }}</div>
+              <div class="name">{{ info.name }}({{ info.ename }})</div>
+              <div class="number">{{ info.number }}</div>
             </div>
           </div>
         </div>
@@ -25,35 +25,35 @@
             <div class="info-row-label">专业</div>
             <div class="info-row-content">
               <div class="fake-text" v-if="loading"></div>
-              <div v-else>{{ info.major || '*******' }}</div>
+              <div v-else>{{ info.major }}</div>
             </div>
           </div>
           <div class="info-row">
             <div class="info-row-label">院系</div>
             <div class="info-row-content">
               <div class="fake-text" v-if="loading"></div>
-              <div v-else>{{ info.college || '*******' }}</div>
+              <div v-else>{{ info.college }}</div>
             </div>
           </div>
           <div class="info-row">
             <div class="info-row-label">状态</div>
             <div class="info-row-content">
               <div class="fake-text" v-if="loading"></div>
-              <div v-else>{{ info.status || '**' }}</div>
+              <div v-else>{{ info.status }}</div>
             </div>
           </div>
           <div class="info-row">
             <div class="info-row-label">类型</div>
             <div class="info-row-content">
               <div class="fake-text" v-if="loading"></div>
-              <div v-else>{{ info.type || '****' }}</div>
+              <div v-else>{{ info.type }}</div>
             </div>
           </div>
           <div class="info-row">
             <div class="info-row-label">校区</div>
             <div class="info-row-content">
               <div class="fake-text" v-if="loading"></div>
-              <div v-else>{{ info.campus || '*******' }}</div>
+              <div v-else>{{ info.campus }}</div>
             </div>
           </div>
         </div>

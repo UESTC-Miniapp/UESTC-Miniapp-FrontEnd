@@ -1,7 +1,7 @@
 <template>
   <div class="course-card">
     <div class="card-title">
-      <img src="/static/book.svg" alt="" class="card-icon">
+      <img src="/static/entry/course.svg" alt="" class="card-icon">
       <span>{{ title }}</span>
     </div>
 
