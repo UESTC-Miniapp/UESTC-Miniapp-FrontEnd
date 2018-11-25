@@ -7,10 +7,11 @@
 		"minified": false,
 		"newFeature": true
 	},
-	"miniprogramRoot": "./dist/",
+	"miniprogramRoot": "dist/",
 	"compileType": "miniprogram",
 	"appid": "wxf912f8bd9523f3bf",
 	"projectname": "uestc-life",
+	"libVersion": "2.3.1",
 	"condition": {
 		"search": {
 			"current": -1,

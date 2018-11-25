@@ -65,43 +65,27 @@
 </template>
 
 <script>
-import db from '../../service/db'
-import api from '../../service/api'
+import store from '@store'
 
 import Header from '@/components/Header'
 import FakeCard from '@/components/FakeCard'
 import NoDataCard from '@/components/NoDataCard'
 
 export default {
-  data () {
-    return { }
-  },
-
   components: {
     HomeHeader: Header,
     FakeCard,
     NoDataCard
   },
 
+  computed: {
+    test: () => store.state.home.test
+  },
+
   async onLoad () {
-    const { token, username } = await db.get(['token', 'username'])
-
-    console.debug('[Home loaded]', token, username)
-
-    // wx.showLoading({ title: '正在检查登录有效性' })
-
-    // 首先检查是否已登录
-    if (!token || !username) {
+    // 登录时判断token是否可用
+    if (!(await store.dispatch('checkTokenAvailable'))) {
       wx.navigateTo({ url: '/pages/login/main' })
-      wx.hideLoading()
-    } else {
-      // 然后检查登录是否过期
-      const res = await api.checkToken({ token, username })
-      wx.hideLoading()
-      if (!res.success || !res.token_is_available) {
-        // await db.remove(['token', 'username'])
-        wx.navigateTo({ url: '/pages/login/main' })
-      }
     }
   }
 }

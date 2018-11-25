@@ -10,8 +10,8 @@
   <div class="login-box card">
     <div class="login-row">
       <input type="number" class="login-input" placeholder="学号"
-        placeholder-style="color: #eee" :value="stunumber" @input="onInputChange"
-        data-val="stunumber" maxlength=13 cursor-spacing=20>
+        placeholder-style="color: #eee" :value="username" @input="onInputChange"
+        data-val="username" maxlength=13 cursor-spacing=20>
       <div class="login-input-tip" v-if="stulen !== 0">{{ stulen }}</div>
       <img class="login-input-tip icon" src="/static/ok.svg" v-else />
     </div>
@@ -25,7 +25,7 @@
   </div>
 
   <div class="login-btn" @click="onPost">
-    <span v-if="!isloading" class="text">{{ loadingText }}</span>
+    <span v-if="!isLoading" class="text">{{ loadingText }}</span>
     <div class="btn-loadings" v-else>
       <div class="loading-block">U</div>
       <div class="loading-block">E</div>
@@ -46,89 +46,79 @@
 </template>
 
 <script>
-import db from '@/service/db'
-import api from '../../service/api'
 import { errorCode2Msg } from '../../utils/error'
+
+import store from '@store'
+import mapState from '@/store/mapState'
 
 import Message from '@/components/Message'
 
 export default {
-  data () {
-    return {
-      stunumber: '',
-      password: '',
-
-      isloading: false,
-      pwdVisiable: false,
-      pwdFocus: false,
-
-      loadingText: '即刻开启多彩成电生活'
-    }
-  },
-
   components: {
     LoginMessage: Message
   },
 
   computed: {
-    stulen () {
-      return 13 - this.stunumber.length
-    }
+    ...mapState('login'),
+    stulen: () => store.getters.stulen,
+    loadingText: () => store.getters.loadingText
+  },
+
+  async onLoad () {
+    const { username, password } = store.getters.apiProfile()
+
+    store.commit('changeState', { username, password })
   },
 
   methods: {
     async onPost () {
+      console.log(this.username, this.loadingText)
+
       if (!this.validInput()) return
 
-      this.isloading = true
+      const loginResult = await store.dispatch('login')
 
-      const res = await api.login({
-        username: this.stunumber,
-        passwd: this.password
-      })
-
-      if (res.success) {
-        await db.set({ token: res.token, username: this.stunumber, password: this.password })
-        this.isloading = false
-        this.loadingText = '登录成功'
+      if (loginResult.success) {
         wx.navigateTo({ url: '/pages/home/main' })
       } else {
-        this.isloading = false
         this.$children[0].show({
-          content: errorCode2Msg(res.error_code),
+          content: errorCode2Msg(loginResult.error_code),
           title: '登录失败',
           duration: 3000
         })
       }
     },
 
-    onInputChange (e, type) {
-      this[e.target.dataset.val] = e.target.value
-      if (e.target.dataset.val === 'stunumber') {
-        this.pwdFocus = this.stunumber.length === 13
+    onInputChange (e) {
+      const key = e.target.dataset.val
+      const value = e.target.value
+
+      store.commit('changeState', { [key]: value })
+      if (key === 'username' && value.length === 13) {
+        store.commit('changeState', { pwdFocus: true })
       }
     },
 
     onBlur () {
-      this.pwdFocus = false
+      store.commit('changeState', { pwdFocus: false })
     },
 
     onFocus () {
-      this.pwdFocus = true
+      store.commit('changeState', { pwdFocus: true })
     },
 
     showPassword () {
-      this.pwdVisiable = true
+      store.commit('changeState', { pwdVisiable: true })
     },
 
     hidePassword () {
-      this.pwdVisiable = false
+      store.commit('changeState', { pwdVisiable: false })
     },
 
     validInput () {
       const validators = [
-        [this.stunumber.length > 0, '请输入13位学号'],
-        [this.stunumber.length === 13, '请检查输入的学号是否有错'],
+        [this.username.length > 0, '请输入13位学号'],
+        [this.username.length === 13, '请检查输入的学号是否有错'],
         [this.password.length > 0, '请输入信息门户密码']
       ]
       validators.some((v, i) => {
@@ -142,28 +132,6 @@ export default {
         return !v[0]
       })
       return validators.every(v => v[0])
-    }
-  },
-
-  async onLoad () {
-    const { token, username, password } = await db.get(['token', 'username', 'password'])
-
-    // wx.navigateTo({ url: '/pages/ecard/main' })
-
-    this.stunumber = username
-    this.password = password
-
-    if (token) {
-      // 直接去主页
-    } else if (username && password) {
-      // 尝试登录
-      const res = await api.login({ username, passwd: password })
-      this.stunumber = username
-      this.password = password
-      if (res.success) {
-        await db.set({ token: res.token })
-        wx.navigateTo('/pages/home/main')
-      }
     }
   }
 }

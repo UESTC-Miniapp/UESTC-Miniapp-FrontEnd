@@ -98,5 +98,30 @@ export default {
     }
 
     return errorKeys.length > 0
+  },
+
+  /**
+   * 同步读取缓存数据
+   */
+  getSync (keys) {
+    const errorKeys = []
+    let result = {}
+
+    keys = typeof (keys) === 'string' ? [keys] : keys
+
+    for (let v of keys) {
+      const value = wx.getStorageSync(v)
+      if (!value) errorKeys.push(v)
+      else result[v] = value
+    }
+
+    if (errorKeys.length > 0) {
+      console.error({
+        msg: '[DB.get]Cannot get those keys content',
+        errorKeys
+      })
+    }
+
+    return result
   }
 }
