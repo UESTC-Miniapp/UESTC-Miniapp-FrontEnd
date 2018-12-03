@@ -64,7 +64,7 @@ export default {
       return 13 - (state.username || '').length
     },
     loadingText (state) {
-      return ['即可开启多彩成电生活', '登录成功', '登录失败'][state.loadingStatus]
+      return ['即刻开启多彩成电生活', '登录成功', '登录失败'][state.loadingStatus]
     }
   }
 }

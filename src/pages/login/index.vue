@@ -150,12 +150,12 @@ export default {
   width: 100%;
   padding: 35px;
   box-sizing: border-box;
-  background: url("http://oxwou2idi.bkt.clouddn.com/head.jpg") 60% 10%;
+  background: linear-gradient(to bottom, rgb(27, 149, 185), rgb(169, 217, 220));
   overflow: hidden;
 }
 
 .title {
-  margin-top: 60%;
+  margin-top: 30%;
   color: #fff;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
 

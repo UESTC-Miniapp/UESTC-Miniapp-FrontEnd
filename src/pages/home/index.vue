@@ -49,7 +49,7 @@
             <img src="/static/entry/other.svg" alt="" class="icon">
             <div class="text">其他</div>
           </div>
-          <a href="/pages/login/main">
+          <a href="/pages/login/main" open-type="redirect">
             <div class="entry">
               <img src="/static/entry/logout.svg" alt="" class="icon">
               <div class="text">退出登录</div>
@@ -57,9 +57,6 @@
           </a>
         </div>
       </div>
-
-      <FakeCard />
-      <NoDataCard />
     </div>
   </div>
 </template>
