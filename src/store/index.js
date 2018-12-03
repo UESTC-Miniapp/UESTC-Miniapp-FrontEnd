@@ -37,7 +37,8 @@ const commonStore = {
     apiProfile: state => () => {
       return {
         username: state.username,
-        token: state.token
+        token: state.token,
+        password: state.password
       }
     }
   },
@@ -47,9 +48,7 @@ const commonStore = {
      * @param {Object} param
      */
     async checkTokenAvailable ({ commit, state }) {
-      console.log(state)
       let isAvailable = state.username && state.password
-      console.log(isAvailable)
       if (isAvailable) {
         const { success } = await api.checkToken()
         isAvailable = isAvailable || success

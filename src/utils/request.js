@@ -10,6 +10,7 @@
  * @param {Object} data data
  */
 export function request (url, method, data = null) {
+  console.debug('[Request]', url, method, data)
   return new Promise((resolve, reject) => {
     wx.request({
       url,
