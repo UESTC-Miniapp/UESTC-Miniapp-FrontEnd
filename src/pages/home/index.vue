@@ -41,11 +41,11 @@
               <div class="text">个人中心</div>
             </div>
           </a>
-          <div class="entry">
+          <div class="entry" @click="onDisableEntryTapped">
             <img src="/static/entry/come.svg" alt="" class="icon">
             <div class="text">签到服务</div>
           </div>
-          <div class="entry">
+          <div class="entry" @click="onDisableEntryTapped">
             <img src="/static/entry/other.svg" alt="" class="icon">
             <div class="text">其他</div>
           </div>
@@ -55,6 +55,13 @@
               <div class="text">退出登录</div>
             </div>
           </a>
+        </div>
+      </div>
+
+      <div class="notice-card card">
+        <div class="card-title">公告</div>
+        <div class="card-content">
+          <span class="notice-text">同学你好，欢迎使用我们的小程序~小程序的一些功能还在开发中，目前只有基础功能（课表/考试/成绩/个人信息）是可用的哦！</span>
         </div>
       </div>
     </div>
@@ -83,6 +90,12 @@ export default {
     // 登录时判断token是否可用
     if (!(await store.dispatch('checkTokenAvailable'))) {
       wx.navigateTo({ url: '/pages/login/main' })
+    }
+  },
+
+  methods: {
+    onDisableEntryTapped () {
+      wx.showToast({ title: '正在开发，敬请期待~', icon: 'none' })
     }
   }
 }
@@ -148,6 +161,19 @@ export default {
           color: #aaa;
           font-weight: bold;
         }
+      }
+    }
+
+    .notice-card {
+      margin-top: 10px;
+
+      .card-content {
+        padding: 10px 0;
+      }
+
+      .notice-text {
+        font-size: 14px;
+        color: #555;
       }
     }
   }
