@@ -16,7 +16,7 @@
       <img class="login-input-tip icon" src="/static/ok.svg" v-else />
     </div>
     <div class="login-row">
-      <input type="number" :password="!pwdVisiable" class="login-input" placeholder="信息门户密码"
+      <input type="text" :password="!pwdVisiable" class="login-input" placeholder="信息门户密码"
         placeholder-style="color: #eee" :value="password" @input="onInputChange"
         data-val="password" :focus="pwdFocus" cursor-spacing=20 @blur="onBlur" @focus="onFocus">
       <img class="login-input-tip icon" src="/static/eye.svg" @click="hidePassword" v-if="pwdVisiable"/>
