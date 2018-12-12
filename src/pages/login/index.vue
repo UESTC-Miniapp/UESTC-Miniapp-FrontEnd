@@ -70,6 +70,10 @@ export default {
     store.commit('changeState', { username, password })
   },
 
+  async onShow () {
+    store.commit('changeState', { loadingStatus: 0 })
+  },
+
   methods: {
     async onPost () {
       console.log(this.username, this.loadingText)
