@@ -122,6 +122,7 @@ export default {
 
   .card-footer {
     .footer-block {
+      display: block;
       .title {
         font-size: 12px;
       }

@@ -31,8 +31,9 @@ import ExamCard from './ExamCard'
 
 import api from '@/service/api'
 import db from '@/service/db'
-import { errorCode2Msg } from '../../../utils/error'
-import { currentSemesterID } from '../../../utils/student'
+import { errorCode2Msg } from '@/utils/error'
+import { currentSemesterID } from '@/utils/student'
+import { completeText } from '@/utils/text'
 
 const types = ['期末', '期中', '补考', '缓考']
 
@@ -68,6 +69,20 @@ export default {
   methods: {
     onTabChange (i) {
       this.showType = i
+    },
+
+    /**
+     * 处理地址
+     */
+    trimAddress (text) {
+      const replacePatterns = [
+        ['立人楼', '立'],
+        ['品学楼', '品']
+      ]
+      replacePatterns.forEach(v => {
+        text = text.replace(v[0], v[1])
+      })
+      return text
     }
   },
 
@@ -92,12 +107,12 @@ export default {
       if (res.success) {
         exams = exams.concat(res.data.map(e => {
           const reg = /\) (.*)/
-          const rs = e.address.match(reg)
+          const rs = e.plan.match(reg)
           return {
             ...e,
             title: e.course_id + '-' + v,
             time: rs && rs[1] ? rs[1] : '',
-            address: e.number + ' ' + e.detail + '号',
+            address: this.trimAddress(e.address) + '-' + completeText(e.number, 2) + '号',
             type: i + 1
           }
         }))
@@ -105,7 +120,12 @@ export default {
         console.log(errorCode2Msg(res.error_code))
       }
       if (count === 4) {
-        this.exam = exams
+        const releasedExams = exams.filter(v => v.status) // 已发布的课程放前面
+        const unreleasedExams = exams.filter(v => !v.status)
+        this.exam = releasedExams.sort((a, b) => {
+          // 已发布的课程，按考试时间排序
+          return new Date(a.date) - new Date(b.date)
+        }).concat(unreleasedExams)
         console.log('[Exam data]', exams)
 
         this.loading = false

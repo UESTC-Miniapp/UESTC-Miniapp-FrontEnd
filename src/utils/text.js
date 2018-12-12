@@ -21,3 +21,16 @@ export function limitText (text, len, end = '...') {
   }
   return rtnVal + (totalLen > len ? end : ' ')
 }
+
+/**
+ * 在短于len的text前补特定的字符，默认补0
+ * @param {String} text 字符串
+ * @param {Number} len 字符串期望长度
+ * @param {String} prefix 用来补全的字符，默认为0
+ */
+export function completeText (text, len, prefix = '0') {
+  if (text.length < len) {
+    return new Array(len - text.length).fill(prefix).join('') + text
+  }
+  return text
+}
