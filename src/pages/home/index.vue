@@ -9,25 +9,25 @@
       </div>
       <div class="entry-card card">
         <div class="entry-row">
-          <a href="/pages/eams/grade/main">
+          <a @click="onRoutingWillNavigate('/pages/eams/grade/main')">
             <div class="entry">
               <img src="/static/entry/grade.svg" alt="" class="icon">
               <div class="text">成绩查询</div>
             </div>
           </a>
-          <a href="/pages/eams/course/main">
+          <a @click="onRoutingWillNavigate('/pages/eams/course/main')">
             <div class="entry">
               <img src="/static/entry/course.svg" alt="" class="icon">
               <div class="text">课程表</div>
             </div>
           </a>
-          <a href="/pages/eams/exam/main">
+          <a @click="onRoutingWillNavigate('/pages/eams/exam/main')">
             <div class="entry">
               <img src="/static/entry/exam.svg" alt="" class="icon">
               <div class="text">考试</div>
             </div>
           </a>
-          <a href="/pages/ecard/main">
+          <a @click="onRoutingWillNavigate('/pages/ecard/main')">
             <div class="entry">
               <img src="/static/entry/ecard.svg" alt="" class="icon">
               <div class="text">一卡通</div>
@@ -35,7 +35,7 @@
           </a>
         </div>
         <div class="entry-row">
-          <a href="/pages/user/main">
+          <a @click="onRoutingWillNavigate('/pages/user/main')">
             <div class="entry">
               <img src="/static/entry/user.svg" alt="" class="icon">
               <div class="text">个人中心</div>
@@ -96,6 +96,14 @@ export default {
   methods: {
     onDisableEntryTapped () {
       wx.showToast({ title: '正在开发，敬请期待~', icon: 'none' })
+    },
+
+    async onRoutingWillNavigate (url) {
+      if (!(await store.dispatch('checkTokenAvailable'))) {
+        wx.navigateTo({ url: '/pages/login/main?message=请先登录' })
+      } else {
+        wx.navigateTo({ url })
+      }
     }
   }
 }

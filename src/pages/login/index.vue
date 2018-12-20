@@ -64,7 +64,10 @@ export default {
     loadingText: () => store.getters.loadingText
   },
 
-  async onLoad () {
+  async onLoad (option) {
+    if (option.message !== undefined) {
+      wx.showToast({ title: option.message, icon: 'none' })
+    }
     const { username, password } = store.getters.apiProfile()
 
     store.commit('changeState', { username, password })
