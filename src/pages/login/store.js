@@ -23,7 +23,7 @@ export default {
      */
     changeState (state, payload) {
       for (let key in payload) {
-        state[key] = payload[key]
+        if (payload[key] !== undefined) state[key] = payload[key]
       }
     }
   },
