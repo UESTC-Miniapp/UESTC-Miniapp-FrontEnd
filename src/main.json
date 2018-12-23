@@ -13,7 +13,7 @@
     "navigationBarBackgroundColor": "#233541",
     "navigationBarTitleText": "成电life",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#233541"，
-    backgroundColorBottom: '#ffffff'
+    "backgroundColor": "#233541",
+    "backgroundColorBottom": "#ffffff"
   }
 }
