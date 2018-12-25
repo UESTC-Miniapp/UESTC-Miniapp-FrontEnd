@@ -11,7 +11,9 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#233541",
-    "navigationBarTitleText": "成电life",
-    "navigationBarTextStyle": "white"
+    "navigationBarTitleText": "清水时光",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#233541",
+    "backgroundColorBottom": "#ffffff"
   }
 }
