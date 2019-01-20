@@ -66,6 +66,9 @@
             <switch class="switch" type="switch" color="#4DAEA4" @change="onLinkChange" :checked="settings.isLinked"></switch>
           </div>
         </label>
+        <div class="card-row" @tap="onAdvice">
+          <div class="label">反馈建议</div>
+        </div>
         <div class="card-row" @tap="onLogout">
           <div class="label logout">退出当前账户登录</div>
           <div class="action"></div>
@@ -124,6 +127,17 @@ export default {
           if (res.confirm) {
             wx.redirectTo({ url: '/pages/login/main' })
           }
+        }
+      })
+    },
+    onAdvice () {
+      wx.setClipboardData({
+        data: 'https://github.com/UESTC-Miniapp/UESTC-Miniapp-FrontEnd/issues',
+        success (res) {
+          wx.showModal({
+            title: '提示',
+            content: '已将在线反馈地址复制到剪贴板，请打开浏览器粘贴到地址栏后访问。'
+          })
         }
       })
     }
@@ -211,7 +225,7 @@ export default {
       .card();
       margin-top: 20px;
       padding: 0;
-      color: #aaa;
+      color: #666;
 
       .card-row {
         border-bottom: 1px solid #eee;
