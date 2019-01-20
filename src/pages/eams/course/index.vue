@@ -96,7 +96,7 @@ export default {
         const st = Math.min(...v.time.map(x => parseFloat(x[1])))
         const ed = Math.max(...v.time.map(x => parseFloat(x[1])))
         const start = st < 2 ? '08:30' : st < 4 ? '10:20' : st < 6 ? '14:30' : st < 8 ? '16:20' : '19:30'
-        const end = ed < 2 ? '10:05' : ed < 4 ? '11:55' : ed < 6 ? '16:05' : ed < 8 ? '17:55' : '21:55'
+        const end = ed < 2 ? '10:05' : ed < 4 ? '11:55' : ed < 6 ? '16:05' : ed < 8 ? '17:55' : '21:05'
         if (v.time && v.time[0]) {
           courses[v.time[0][0]].list.push(Object.assign({}, v, {
             time: `周${dateTable[v.time[0][0]]}${text} ${start} 到 ${end}`,

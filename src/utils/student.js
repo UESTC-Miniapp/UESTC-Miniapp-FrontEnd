@@ -11,4 +11,6 @@ const currentMonth = currentDate.getMonth()
 
 const term = currentMonth < 8 && currentMonth > 2 ? 1 : 0
 
-export const currentSemesterID = ((currentYear - START_YEAR) * 2 - term) * 20 + sid
+const offset = currentMonth < 2 ? 1 : 0 // 针对寒假月份的偏移处理
+
+export const currentSemesterID = ((currentYear - START_YEAR - offset) * 2 - term) * 20 + sid
