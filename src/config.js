@@ -5,6 +5,6 @@
 
 export default {
   url: {
-    root: 'https://ch34k.xyz/wechat/UESTC-Miniapp-Backend/'
+    root: 'https://ch34k.xyz/master/UESTC-Miniapp-Backend/'
   }
 }
