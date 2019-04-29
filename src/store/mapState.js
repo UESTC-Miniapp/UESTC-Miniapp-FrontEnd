@@ -13,6 +13,16 @@ export default function (namespace, keys) {
       mappedState[v] = () => store.state[namespace][v]
     })
 
+    // 映射local getters到state中
+    Object.keys(store.getters).forEach(v => {
+      if (v.startsWith(namespace + '/')) {
+        const k = v.replace(namespace + '/', '')
+        mappedState[k] = () => store.getters[v]
+      }
+    })
+
+    console.debug('[mapstate]: ', namespace, mappedState)
+
     return mappedState
   } else {
     throw Error('Unvalid Namespace!')

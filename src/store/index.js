@@ -50,8 +50,8 @@ const commonStore = {
     async checkTokenAvailable ({ commit, state }) {
       let isAvailable = state.username && state.password
       if (isAvailable) {
-        const { success } = await api.checkToken()
-        isAvailable = isAvailable || success
+        const res = await api.checkToken()
+        isAvailable = isAvailable && res['token_is_available']
       }
       return isAvailable
     }

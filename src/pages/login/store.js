@@ -5,6 +5,7 @@
 import api from '@/service/api'
 
 export default {
+  namespaced: true,
   state: {
     username: '',
     password: '',
@@ -51,7 +52,7 @@ export default {
           username,
           password,
           token
-        })
+        }, { root: true })
       } else {
         commit('changeState', { loadingStatus: 2 })
       }

@@ -89,7 +89,10 @@ export default {
   async onLoad () {
     // 登录时判断token是否可用
     if (!(await store.dispatch('checkTokenAvailable'))) {
-      wx.navigateTo({ url: '/pages/login/main' })
+      const hasLogin = await store.dispatch('home/login')
+      if (!hasLogin) {
+        wx.navigateTo({ url: '/pages/login/main' })
+      }
     }
   },
 

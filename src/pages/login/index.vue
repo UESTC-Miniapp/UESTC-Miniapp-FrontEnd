@@ -59,19 +59,17 @@ export default {
   },
 
   computed: {
-    ...mapState('login'),
-    stulen: () => store.getters.stulen,
-    loadingText: () => store.getters.loadingText
+    ...mapState('login')
   },
 
   async onLoad () {
     const { username, password } = store.getters.apiProfile()
 
-    store.commit('changeState', { username, password })
+    store.commit('login/changeState', { username, password })
   },
 
   async onShow () {
-    store.commit('changeState', { loadingStatus: 0 })
+    store.commit('login/changeState', { loadingStatus: 0 })
   },
 
   methods: {
@@ -80,7 +78,7 @@ export default {
 
       if (!this.validInput()) return
 
-      const loginResult = await store.dispatch('login')
+      const loginResult = await store.dispatch('login/login')
 
       if (loginResult.success) {
         wx.navigateTo({ url: '/pages/home/main' })
@@ -97,26 +95,26 @@ export default {
       const key = e.target.dataset.val
       const value = e.target.value
 
-      store.commit('changeState', { [key]: value })
+      store.commit('login/changeState', { [key]: value })
       if (key === 'username' && value.length === 13) {
-        store.commit('changeState', { pwdFocus: true })
+        store.commit('login/changeState', { pwdFocus: true })
       }
     },
 
     onBlur () {
-      store.commit('changeState', { pwdFocus: false })
+      store.commit('login/changeState', { pwdFocus: false })
     },
 
     onFocus () {
-      store.commit('changeState', { pwdFocus: true })
+      store.commit('login/changeState', { pwdFocus: true })
     },
 
     showPassword () {
-      store.commit('changeState', { pwdVisiable: true })
+      store.commit('login/changeState', { pwdVisiable: true })
     },
 
     hidePassword () {
-      store.commit('changeState', { pwdVisiable: false })
+      store.commit('login/changeState', { pwdVisiable: false })
     },
 
     validInput () {
