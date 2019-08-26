@@ -2,6 +2,8 @@
 
 > 电子科技大学便利小程序——清水时光
 
+![image](https://user-images.githubusercontent.com/16968934/63694377-e499dc80-c848-11e9-8193-4de00207f357.png)
+
 ### 如何开发
 
 ```bash
